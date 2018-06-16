@@ -68,7 +68,7 @@ fi
 mount -o remount,rw /
 logsh "【Tools】" "下载工具箱文件..."
 rm -rf /tmp/monlor.tar.gz > /dev/null 2>&1
-curl -skLo /userdisk/monlor.tar.gz "$monlorurl"/appstore/monlor.tar.gz
+curl -skLo /tmp/monlor.tar.gz "$monlorurl"/appstore/monlor.tar.gz
 [ $? -ne 0 ] && logsh "【Tools】" "文件下载失败！" && exit
 logsh "【Tools】" "解压工具箱文件"
 tar -zxvf /tmp/monlor.tar.gz -C /tmp > /dev/null 2>&1
