@@ -38,6 +38,8 @@
 	3. 初始化：init.sh 
 	4. 插件管理：appmanage.sh add|upgrade|del appname [-f]
 	5. 工具箱配置：monlor (任意界面Ctrl + c可以退出配置)
+	6. 在线更新：sh -c "$(curl -kfsSl $(uci get monlor.tools.url)/scripts/update.sh)"
+	7. 在线卸载：sh -c "$(curl -kfsSl $(uci get monlor.tools.url)/scripts/uninstall.sh)"
 
 ## 目录结构：  
 	/
@@ -60,6 +62,7 @@
 	3. 安装完成后执行monlor命令配置工具箱，Ctrl + c或者输入exit可以退出。 
 	4. ss插件推荐使用aes-256-cfb或rc4-md5加密方式，mips平台较新的加密方式可能不支持。
 	5. 关于迅雷快鸟FastDick，请按https://github.com/fffonion/Xunlei-Fastdick这里的教程运行swjsq.py并找到运行成功后生成的swjsq_wget.sh文件，提取里面的uid,pwd,peerid即可。
+	6. 插件列表显示异常运行：rm -rf $(uci get monlor.tools.path)/config/applist.txt
 
 ## 更新内容：
 	2018-06-16
