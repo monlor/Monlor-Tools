@@ -61,3 +61,4 @@ fi
 logsh "【Tools】" "See You!"
 
 rm -rf $monlorpath
+rm -rf /tmp/version
