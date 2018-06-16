@@ -101,13 +101,13 @@ add() {
 	uci set monlor.$appname.LOG=/var/log
 	uci commit monlor
 	#运行安装脚本
-	if [ -f /tmp/$appname/install/install.sh ]; then
+	if [ -f /tmp/$appname/script/install.sh ]; then
 		logsh "【Tools】" "运行插件安装脚本"
-		/tmp/$appname/install/install.sh
+		/tmp/$appname/script/install.sh
+		rm -rf /tmp/$appname/script/install.sh
 	fi
 	#安装插件
 	logsh "【Tools】" "安装插件到工具箱"
-	rm -rf /tmp/$appname/install
 	cp -rf /tmp/$appname/ $monlorpath/apps/
 	#清除临时文件
 	rm -rf /tmp/$appname

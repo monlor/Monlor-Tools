@@ -57,7 +57,7 @@
 	1. 如果插件和工具箱都有更新，请务必先更新工具箱！
 	2. 工具箱没有web界面，完全靠Shell开发，插件的安装、卸载、配置由配置文件完成。   
 	3. 安装完成后执行monlor命令配置工具箱，Ctrl + c或者输入exit可以退出。 
-	4. ss插件推荐使用aes-256-cfb或rc4-md5加密方式，较新的加密方式可能不支持
+	4. ss插件推荐使用aes-256-cfb或rc4-md5加密方式，mips平台较新的加密方式可能不支持。
 	5. 关于迅雷快鸟FastDick，请按https://github.com/fffonion/Xunlei-Fastdick这里的教程运行swjsq.py并找到运行成功后生成的swjsq_wget.sh文件，提取里面的uid,pwd,peerid即可。
 
 ## 更新内容：
