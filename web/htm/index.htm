@@ -1,0 +1,74 @@
+<%
+--[[
+    Info    Index
+]]--
+local ver = require("xiaoqiang.XQVersion").webVersion
+local uci = require("luci.model.uci").cursor()
+local hardwareModel = tostring(uci:get("misc", "hardware", "model"))
+%>
+<%include("web/inc/head")%> 
+    <meta charset="UTF-8">
+    <title>小米路由器插件中心</title>
+    <link href="<%=resource%>/web/css/bc.css?v=<%=ver%>" rel="stylesheet">
+    <link href="/backup/log/css/monlor-style.css?v=<%=ver%>" rel="stylesheet">
+</head>
+    
+<body>
+   
+<div id="doc">
+    <%include("web/inc/header")%>
+
+    <div id="bd">
+        <div class="head">
+            <h1>Monlor Tools工具箱</h4>
+        </div>
+        <a href="<%=luci.dispatcher.build_url("web", "monlor", "ss")%>"><ul class="module" id="ss">
+            <li class="icontype"><img src="/backup/log/img/icon-shadowsocks.png"></li>
+            <li class="contenttype">Shadowsocks<br><br>到墙外看看</li>
+        </ul></a>
+        <a href="<%=luci.dispatcher.build_url("web", "monlor", "koolproxy")%>"><ul class="module" id="kp">
+            <li class="icontype"><img src="/backup/log/img/icon-koolproxy.png"></li>
+            <li class="contenttype">Koolproxy<br><br>过滤广告</li>
+        </ul></a>
+       <!--  <a href="<%=luci.dispatcher.build_url("web", "monlor", "frp")%>"><ul class="module" id="frp">
+            <li class="icontype"><img src="<%=resource%>/web/img/monlor-shadowsocks.png"></li>
+            <li class="contenttype">Frp<br><br>内网穿透工具</li>
+        </ul></a>
+        <a href="<%=luci.dispatcher.build_url("web", "monlor", "tinyproxy")%>"><ul class="module" id="meow">
+            <li class="icontype"><img src="<%=resource%>/web/img/monlor-shadowsocks.png"></li>
+            <li class="contenttype">Tinyproxy<br><br>Http代理</li>
+        </ul></a>
+        <a href="<%=luci.dispatcher.build_url("web", "monlor", "kms")%>"><ul class="module" id="kms">
+            <li class="icontype"><img src="<%=resource%>/web/img/monlor-shadowsocks.png"></li>
+            <li class="contenttype">Kms<br><br>系统激活工具</li>
+        </ul></a>
+        <a href="<%=luci.dispatcher.build_url("web", "monlor", "aria2")%>"><ul class="module" id="aria2">
+            <li class="icontype"><img src="<%=resource%>/web/img/monlor-shadowsocks.png"></li>
+            <li class="contenttype">Aria2<br><br>Linux下的下载神器</li>
+        </ul></a>
+        <a href="<%=luci.dispatcher.build_url("web", "monlor", "webshell")%>"><ul class="module" id="webshell">
+            <li class="icontype"><img src="<%=resource%>/web/img/monlor-shadowsocks.png"></li>
+            <li class="contenttype">Webshell<br><br>网页终端</li>
+        </ul></a>
+        <a href="<%=luci.dispatcher.build_url("web", "monlor", "nginx")%>"><ul class="module" id="nginx">
+            <li class="icontype"><img src="<%=resource%>/web/img/monlor-shadowsocks.png"></li>
+            <li class="contenttype">Nginx<br><br>可搭建网页服务器</li>
+        </ul></a>
+        <a href="<%=luci.dispatcher.build_url("web", "monlor", "fastdick")%>"><ul class="module" id="fastdick">
+            <li class="icontype"><img src="<%=resource%>/web/img/monlor-shadowsocks.png"></li>
+            <li class="contenttype">迅雷快鸟<br><br>提升上下行宽带</li>
+        </ul></a> -->
+    </div>
+    <%include("web/inc/footer")%>
+</div>
+<%include("web/inc/g.js")%>
+<script>
+    $(function(){
+        $(".module").mouseover(function(){
+            $(this).siblings().css("opacity","0.5");
+        })
+    })
+</script>
+</body>
+    
+</html>

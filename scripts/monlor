@@ -1,0 +1,422 @@
+#!/bin/ash
+#copyright by monlor
+#------------------【Tools】--------------------
+source "$(uci -q get monlor.tools.path)"/scripts/base.sh 
+param=$1
+Applist=$monlorpath/config/applist.txt
+
+get_version() {
+	wgetsh /tmp/version.tar.gz $monlorurl/version.tar.gz
+	[ $? -eq 0 ] && tar -zxvf /tmp/version.tar.gz -C /tmp > /dev/null 2>&1
+	rm -rf /tmp/version.tar.gz
+}
+
+title() {
+
+	echo "***************************************"
+	echo "   *****  Monlor Tools工具箱  *****"
+	echo "***************************************"
+	newver=$(cat /tmp/version/tools.txt) > /dev/null 2>&1 || newver="获取中"
+	echo -e "当前版本：[$monlorver]\t最新版本：[$newver]"
+	[ -f /proc/dmu/temperature ] && temp="`cat /proc/dmu/temperature | awk '{printf$4}' | cut -b 1-2`°C"
+	[ ! -z "$temp" ] && temptext="核心温度：[$temp]" || temptext="上网方式：[`nvram get nv_wan_type`]"
+	echo -e "设备型号：[$xq]  \t$temptext"
+	echo "***************************************"
+
+}
+
+manage() {
+
+	clear
+	title
+	echo "00. 返回主菜单"
+	echo "01. 安装/更新插件"
+	echo "02. 卸载插件"
+	echo "03. 卸载工具箱"
+	xunlei=$(uci -q get monlor.tools.xunlei)
+	[ "$xunlei" == '1' ] && xunlei="已关闭" || xunlei="未关闭"
+	echo "04. 关闭迅雷[$xunlei]"
+	samba_path=$(uci -q get monlor.tools.samba_path)
+	[ ! -z "$samba_path" ] && samba_path="$samba_path" || samba_path="未修改"
+	echo "05. 修改samba路径[$samba_path]"
+	hostsed=$(cat /etc/hosts | grep -c monlor-hosts)
+	[ "$hostsed" != '0' ] && hosts="已修改" || hosts="未修改"
+	echo "06. 修改hosts[$hosts]"
+	[ -f "$monlorbackup".tar.gz ] && result="已备份" || result="未备份"
+	echo "07. 备份插件配置[$result]"
+	echo "08. 恢复插件配置"
+	case "$monlorurl" in
+		"$monlorurl_coding") result="coding下载源" ;;
+		"$monlorurl_github") result="github下载源" ;;
+		"$monlorurl_test") result="coding测试源" ;;
+		*) result="$monlorurl" ;;
+	esac
+	echo "09. 更换工具箱下载源[$result]"
+	no_update=$(uci -q get monlor.tools.no_update)
+	result=$(cat /etc/crontabs/root | grep -c otapredownload)
+	[ "$no_update" == '1' -a "$result" == '0' ] && no_update="已禁止" || no_update="未禁止"
+	echo "10. 禁止小米路由器自动更新[$no_update]"
+	echo
+	read -p "请输入你的选择：" select
+	case "$select" in
+		0|00)
+			menu
+		;;
+		1|01)
+			echo
+			echo "获取工具箱插件列表..."
+			wgetsh /tmp/applist.txt $monlorurl/temp/applist_"$xq".txt
+			if [ $? -ne 0 ]; then
+				[ "$model" == "arm" ] && applist="applist.txt"
+				[ "$model" == "mips" ] && applist="applist_mips.txt"
+				wgetsh /tmp/applist.txt $monlorurl/temp/"$applist"
+			fi
+			echo "********* 安装/更新插件 ***********"
+			echo "00. 返回"
+			i=1
+			if [ -f /tmp/applist.txt ]; then
+				cat /tmp/applist.txt | while read line
+				do
+					checkuci $line && tmp="`echo -e "\033[32m已安装\033[0m"`" || tmp="`echo -e "\033[31m未安装\033[0m"`"
+					[ "$i" -lt "10" ] && k="0$i" || k="$i"
+					echo "$k. [$tmp] $line"
+					let i=$i+1
+				done
+			else
+				echo "[插件列表未找到，请检查网络问题！]"
+			fi
+			echo
+			read -p "请选择要安装/更新的插件：" res
+			if [ ! -z "$res" ]; then 
+				if [ "$res" == '0' -o "$res" == '00' -o ! -f /tmp/applist.txt ]; then
+					manage
+				else
+					result=$(echo $res | grep -c "^[0-9][0-9]*$")
+					if [ "$result" == '1' ]; then
+						appname=$(cat /tmp/applist.txt | sed -n "$res"p)
+						if [ ! -z "$appname" ]; then
+							if checkuci $appname; then 
+								read -p "插件$appname已安装，是否要更新？[1/0] " res
+								[ "$res" == '1' ] && appmanage.sh upgrade $appname -f 
+							else
+								appmanage.sh add $appname
+								if checkuci $appname; then 
+									source "$monlorpath"/apps/$appname/config/monlor.conf 
+									$appname
+									uci commit monlor
+								fi
+							fi
+						else
+							echo "输入有误！"
+						fi
+					fi 
+				fi
+			fi
+		;;
+		2|02)
+			echo
+			echo "********* 卸载插件 ***********"
+			echo "00. 返回"
+			i=1
+			cat $Applist | while read line
+			do
+				[ "$i" -lt "10" ] && k="0$i" || k="$i"
+				echo "$k. $line"
+				let i=$i+1
+			done
+			echo
+			read -p "请选择要卸载的插件：" res
+			if [ ! -z "$res" ]; then
+				if [ "$res" == '0' ]; then
+					manage
+				else
+					result=$(echo $res | grep -c "^[0-9][0-9]*$")
+					if [ "$result" == '1' ]; then
+						appname=$(cat $Applist | sed -n "$res"p)
+						[ ! -z "$appname" ] && appmanage.sh del $appname
+					fi 
+				fi
+			fi
+		;;
+		3|03)
+			wgetsh $monlorpath/scripts/uninstall.sh $monlorurl/scripts/uninstall.sh
+			[ $? -eq 0 ] && $monlorpath/scripts/uninstall.sh || echo "获取卸载脚本失败！"
+			exit
+		;;
+		4|04)
+			read -p "确定要关闭迅雷服务？[1/0] " xunlei
+			checkread $xunlei && uci set monlor.tools.xunlei="$xunlei"
+			if [ "$xunlei" == '1' ]; then
+				killall etm 2>/dev/null
+				/etc/init.d/xunlei disable 2>/dev/null
+				sed -i 's@/etc/config/thunder@/etc/thunder@g' /etc/init.d/xunlei
+				if [ -d /etc/config/thunder ]; then
+					cp -a  /etc/config/thunder /etc
+					rm -rf /etc/config/thunder
+				fi
+			else
+				sed -i 's@/etc/thunder@/etc/config/thunder@g' /etc/init.d/xunlei
+				if [ ! -d /etc/config/thunder ]; then
+					cp -a  /etc/thunder /etc/config
+					rm -rf /etc/thunder
+				fi
+				/etc/init.d/xunlei enable
+				/etc/init.d/xunlei start &
+			fi
+		;;
+		5|05)
+			read -p "请输入新的samba路径(回车不设置)：" samba_path
+			[ ! -d "$samba_path" -a ! -z "$samba_path" ] && mkdir -p $samba_path
+			if [ ! -z "$samba_path" ]; then
+				if [ ! -f /etc/samba/smb.conf ]; then
+					logsh "【Tools】" "未找到samba配置文件！" 
+					samba_path=""
+				else
+					if [ -z "$samba_path" ]; then
+						/etc/init.d/samba restart &> /dev/null
+					else
+						sed -i "1,/path/ s#\(path\).*#\1 = $samba_path#" /etc/samba/smb.conf
+						killall smbd && /usr/sbin/smbd -D &> /dev/null
+						killall nmbd && /usr/sbin/nmbd -D &> /dev/null
+					fi
+				fi
+			fi
+			uci set monlor.tools.samba_path="$samba_path"
+			uci commit monlor
+		
+		;;
+		6|06)
+			read -p "确定要增加Github的hosts？[1/0] " res
+			checkread $res && uci set monlor.tools.hosts="$res"
+			sed -i '/#monlor-hosts/d' /etc/hosts
+			if [ "$res" == '1' ]; then
+				cat $monlorpath/config/hosts.txt >> /etc/hosts
+			fi
+			
+		;;
+		7|07)
+			if [ -f "$monlorbackup".tar.gz ]; then
+				read -p "检测到已被备份插件配置, 确认覆盖？[1/0] " res
+			else
+				read -p "确定要备份所有插件配置吗？[1/0] " res
+			fi
+			if [ "$res" == '1' ]; then
+				backup
+			fi
+		;;
+		8|08)
+			
+			read -p "确定要恢复所有插件配置吗(将会覆盖当前配置)？[1/0] " res
+			if [ "$res" == '1' ]; then
+				recover
+				echo "恢复完成, 初始化工具箱..."
+				$monlorpath/scripts/init.sh
+			fi
+
+		;;
+		9|09)
+			echo "1. coding下载源"
+			echo "2. github下载源"
+			echo "3. coding测试源(不推荐)"
+			read -p "请选择或输入下载源：" res
+			case "$res" in
+				1) monlorurl="$monlorurl_coding" ;;
+				2) monlorurl="$monlorurl_github" ;;
+				3) monlorurl="$monlorurl_test" ;;
+				*) monlorurl="$res" ;;
+			esac
+			if [ ! -z "$monlorurl" ]; then
+				uci set monlor.tools.url="$monlorurl" 
+				uci commit monlor 
+				get_version
+			fi
+		;;
+		10)
+			read -p "确定要禁止小米路由器系统自动更新？[1/0] " res
+			checkread $res && uci set monlor.tools.no_update="$res"
+			if [ "$res" == '1' ]; then
+				sed -i "/otapredownload/d" /etc/crontabs/root
+			else
+				sed -i "/otapredownload/d" /etc/crontabs/root
+				echo "15 3,4,5 * * * /usr/sbin/otapredownload >/dev/null 2>&1" >> /etc/crontabs/root
+			fi
+		;;
+		"")
+			menu
+		;;
+		*)	
+			read -p "输入有误！重新输入？[1/0] " res
+			if [ "$res" == '1' ]; then
+				manage
+			fi
+		;;
+	esac
+
+}
+
+menulist() {
+	title
+	echo "00. 管理菜单(Ctrl + c退出)"
+	if [ ! -f $Applist ]; then
+		echo "[未找到插件列表，尝试修复中...]" 
+		rm -rf $Applist
+		curl -skL $monlorurl/temp/applist.txt | while read line
+		do
+			checkuci $line && echo $line >> $Applist
+		done
+	fi
+	if [ ! -f $Applist ]; then
+		echo "[修复失败！]" 
+	else
+		i=0;
+		cat $Applist | sort | while read line
+		do
+			if checkuci $line; then
+				let i=$i+1
+	                        args="\t"
+	                        [ "$i" -ge 10 ] && head="$i. $line" || head="0$i. $line"
+	                        [ "${#head}" -lt 8 ] && args="\t\t"
+	                        [ "${#head}" -eq 16 ] && args=""
+	                        echo -e "$head$args`check_install $line` `check_update $line`"
+			fi
+		done 
+		if [ -z "$(ls $monlorpath/apps)" ]; then
+			echo -e "[请选择管理菜单安装插件！]"
+		fi
+	fi
+	echo
+}
+
+menu() {
+
+	while(true)
+	do
+	clear
+	pssh c #清除ps缓存
+	menulist
+	compare $newver $monlorver && tmptext="[\033[36m输入u更新工具箱\033[0m]"
+	read -p "请输入你的选择`echo -e $tmptext`：" select
+	echo
+	[ "$select" == "exit" ] && exit
+	[ -z "$select" ] && exit
+	if [ "$select" == 'u' ]; then
+		wgetsh $monlorpath/scripts/update.sh $monlorurl/scripts/update.sh
+		[ $? -eq 0 ] && $monlorpath/scripts/update.sh -f || echo "获取更新脚本失败！"
+		exit
+	fi
+	if [ `echo $select | grep -c '^[0-9][0-9]*$'` -eq 1 ]; then
+		if [ "$select" -eq 0 ]; then
+			manage
+		elif [ "$select" -ge '0' ] && [ "$select" -le "$(cat "$Applist" | wc -l)" ]; then
+			appname=$(cat "$Applist" | sort | sed -n "$select"p)
+			if [ ! -z "$appname" ]; then
+				if checkuci $appname; then
+					if [ ! -z `check_update $appname` ]; then
+						read -p "是否要更新$appname插件？[1/0] " update
+						[ "$update" == '1' ] && appmanage.sh upgrade $appname 
+					fi
+				else
+					read -p "确定要安装$appname插件？[1/0] " install
+					[ "$install" = '1' ] && appmanage.sh add $appname 
+				fi
+				if checkuci $appname; then 
+					source "$monlorpath"/apps/$appname/config/monlor.conf 
+					$appname
+					uci commit monlor
+				fi
+			else 
+				echo "输入有误，未找到该插件！"
+			fi
+		else
+			echo "输入有误，没有该序号！"
+		fi
+	else
+		echo "输入有误，请输入数字！"
+	fi
+	[ "`uci -q get monlor.tools.ins_method`" == '0' ] && backup > /dev/null 2>&1
+	read -p "返回主菜单？[1/0] " res
+	[ "$res" == '0' ] && exit
+	done
+
+}
+
+check_install() {
+
+	if checkuci $1; then
+		status=$($monlorpath/apps/$1/script/$1.sh status | head -1) > /dev/null 2>&1
+		if [ ! -z "$status" ]; then
+			if [ "$status" != "未运行" ]; then
+				echo -n "[\033[32m$status\033[0m]" 
+			else
+				echo -n "[\033[31m$status\033[0m]" 
+			fi
+		else
+			echo -n "[\033[31m脚本异常\033[0m]"
+		fi
+	else 
+		echo -n "[选择以安装]"
+	fi
+}
+
+check_update() {
+
+	newver=$(cat /tmp/version/$1.txt) > /dev/null 2>&1
+	oldver=$(cat $monlorpath/apps/$1/config/version.txt) > /dev/null 2>&1
+	if [ ! -z "$newver" -a ! -z "$oldver" ] && compare $newver $oldver; then
+		echo -n "[\033[36m有更新\033[0m]"
+	fi
+
+}
+
+backup() {
+
+	rm -rf $monlorbackup
+	rm -rf "$monlorbackup".tar.gz
+	mkdir -p $monlorbackup
+	cp -rf $Applist $monlorbackup
+	cat $Applist | while read line 
+	do
+		$monlorpath/apps/$line/script/$line.sh backup
+	done
+	cp -rf /etc/config/monlor $monlorbackup/monlor.uci
+	cp -rf $monlorpath/scripts/userscript.sh $monlorbackup/userscript.sh
+	sed -i '/option userdisk/d' $monlorbackup/monlor.uci
+	sed -i '/path.*monlor/d' $monlorbackup/monlor.uci
+	sed -i '/profilepath/d' $monlorbackup/monlor.uci
+	sed -i '/libpath/d' $monlorbackup/monlor.uci
+	tar zcvf "$monlorbackup".tar.gz $monlorbackup > /dev/null 2>&1
+	rm -rf $monlorbackup
+	echo "备份完成, 配置已备份至$monlorbackup.tar.gz"
+
+}
+
+recover() {
+
+	[ ! -f "$monlorbackup".tar.gz ] && echo "未找到备份文件！" && return 1
+	rm -rf $monlorbackup
+	tar zxvf "$monlorbackup".tar.gz -C / > /dev/null 2>&1
+	cp -rf $monlorbackup/applist.txt $Applist
+	cat $Applist | while read line 
+	do
+		[ -z "$(cat $Applist | grep "^$line$")" ] && continue
+		checkuci $line || $monlorpath/scripts/appmanage.sh add $line -f
+		$monlorpath/apps/$line/script/$line.sh recover
+	done
+	# 恢复uci配置
+	cp -rf $monlorbackup/monlor.uci /etc/config/monlor
+	cp -rf $monlorbackup/userscript.sh $monlorpath/scripts/userscript.sh
+	rm -rf $monlorbackup
+	return 0
+
+}
+
+#------------------【Tools】--------------------
+if [ ! -z $param ]; then 
+	[ -f $monlorpath/apps/$param/config/monlor.conf ] && source $monlorpath/apps/$param/config/monlor.conf
+	$param
+else 
+	echo
+	echo "获取工具箱版本信息..."
+	get_version
+	menu
+fi

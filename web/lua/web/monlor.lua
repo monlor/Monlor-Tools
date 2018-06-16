@@ -1,0 +1,15 @@
+module("luci.controller.web.monlor", package.seeall)
+
+function index()
+	entry({"web", "monlor"}, alias("web", "monlor", "index"), _("index"), 70)
+	entry({"web", "monlor", "index"}, template("web/monlor/index"), _("index"), 71)
+	entry({"web", "monlor", "ss"}, template("web/monlor/ss"), _("ss"), 72)
+	entry({"web", "monlor", "koolproxy"}, template("web/monlor/koolproxy"), _("koolproxy"), 73)
+	entry({"web", "monlor", "frp"}, template("web/monlor/frp"), _("frp"), 74)
+	entry({"web", "monlor", "tinyproxy"}, template("web/monlor/tinyproxy"), _("tinyproxy"), 75)
+	entry({"web", "monlor", "kms"}, template("web/monlor/kms"), _("kms"), 76)
+	entry({"web", "monlor", "aria2"}, template("web/monlor/aria2"), _("aria2"), 77)
+	entry({"web", "monlor", "webshell"}, template("web/monlor/webshell"), _("webshell"), 78)
+	entry({"web", "monlor", "nginx"}, template("web/monlor/nginx"), _("nginx"), 79)
+	entry({"web", "monlor", "fastdick"}, template("web/monlor/fastdick"), _("fastdick"), 80)
+end

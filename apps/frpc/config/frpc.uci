@@ -1,0 +1,5 @@
+appname=frpc
+uci set monlor.$appname=config
+uci set monlor.$appname.service=Frpc
+uci set monlor.$appname.appname="$appname"
+uci set monlor.$appname.tools="2.5.28"

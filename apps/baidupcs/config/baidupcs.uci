@@ -1,0 +1,5 @@
+uciset="uci set monlor.baidupcs"
+$uciset=config
+$uciset.service="BaiduPCS"
+$uciset.appname="baidupcs"
+$uciset.tools="2.6.6"

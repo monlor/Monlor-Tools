@@ -1,0 +1,145 @@
+<%
+--[[
+    Info    KoolProxy
+]]--
+local ver = require("xiaoqiang.XQVersion").webVersion
+local uci = require("luci.model.uci").cursor()
+local version = tostring(uci:get("monlor", "koolproxy", "version"))
+%>
+<%include("web/inc/head")%> 
+    <title>小米路由器插件中心</title>
+    <link href="<%=resource%>/web/css/bc.css?v=<%=ver%>" rel="stylesheet">
+    <link href="/backup/log/css/monlor-style.css?v=<%=ver%>" rel="stylesheet">
+    <!-- <script type="text/javascript" src="<%=resource%>/web/js/jquery-3.2.1.min.js"></script> -->
+</head>
+    
+<body>
+   
+<div id="doc">
+    <%include("web/inc/header")%>
+
+    <div id="bd">
+        <div class="frame">
+            <div class="content">
+                <div class="linetype linestyle1">
+                    <span>KoolProxy</span>
+                    <button type="button" onclick="history.back()" class="back btn">返回</button>
+                </div>
+                <div class="linetype">
+                    <span class="info">启动服务：</span>
+                    <input type="checkbox" class="setinfo" id="kpenable" checked/>
+                </div>
+                <div class="linetype">
+                    <span class="info">运行状态：</span>
+                    <span class="setinfo">
+                        <a id="status" >获取中...</a>
+                        <a style="color: gray;">&nbsp;VER:<%=version%></a>
+                    </span>
+                </div>
+                <div class="linetype">
+                    <span class="info">运行模式：</span>
+                    <select class="setinfo" id="select_mode">
+                        <option>请选择</option>
+                        <option value ="1">全局模式</option>
+                        <option value="2">黑名单模式</option>
+                        <option value ="3">视频模式</option>
+                    </select>
+                </div>
+                <div class="linetype">
+                    <span class="info">自动更新自定义规则：</span>
+                    <input type="checkbox" class="setinfo" id="autorule" checked/>
+                </div>
+                <div class="linetype linelast">
+                    <span class="info">证书下载：</span>
+                    <a type="button" value="证书下载" id="getcert" class="setinfo" href="/backup/log/koolproxy/ca.crt" style="color: blue;display: none;">点击下载</a>
+                </div>
+            </div>
+
+            <div class="end">
+                <button type="button" class="save btn" onclick="save()">保存</button>
+                <button type="button" class="exit btn" onclick="exit()">取消</button>
+            </div>
+        </div>
+    </div>
+    <%include("web/inc/footer")%>
+    <%include("web/inc/g.js")%>
+    <script type="text/javascript">
+
+        $(function(){ 
+            $(".frame").fadeIn(400);
+            $.getJSON('<%=luci.dispatcher.build_url("api","monlor","koolproxy_get")%>', {}, function(rsp) {
+                var status = rsp.status;
+                var enable = rsp.enable;
+                var mode = rsp.mode
+                var autorule = rsp.autorule
+                 if (rsp.status==1){
+                    $("#status").html("运行中");
+                    $("#status").css("color", "green")
+                    $("#getcert").css("display", "inline-block")
+                }else{
+                    $("#status").html("未运行");
+                    $("#status").css("color", "red")
+                }
+                
+                if (enable == 1){
+                     $("#kpenable").attr("checked");
+                }else{
+                    $("#kpenable").removeAttr("checked");
+                }
+                $("#select_mode").val(mode.toString()); 
+                if (autorule == 1){
+                    $("#autorule").attr("checked");
+                }else{
+                    $("#autorule").removeAttr("checked");
+                }
+
+            });
+        });
+        
+        
+        
+        function save() {
+            var kpenable = $("#kpenable").is(':checked');
+            var autorule = $("#autorule").is(':checked');
+            var tpldata = {
+                enable:'',
+                mode:'',
+                autorule:''
+            };
+            (kpenable == true) ? tpldata.enable = 1 : tpldata.enable = 0;
+            tpldata.mode = $("#select_mode").val()
+            autorule == true ? tpldata.autorule = 1 : tpldata.autorule = 0;
+            if(kpenable==true){
+                $.pub( 'loading:start' );
+                $.getJSON('<%=luci.dispatcher.build_url("api","monlor","koolproxy_start")%>', tpldata, function(rsp){
+                    $.pub( 'loading:stop' );
+                    location.reload()
+                    if (rsp.code != 0) {
+                        alert("启动失败！")
+                    }
+                })
+            }else{
+                $.pub( 'loading:start' );
+                $.getJSON('<%=luci.dispatcher.build_url("api","monlor","koolproxy_stop")%>', tpldata, function(rsp){
+                    $.pub( 'loading:stop' );
+                    location.reload()
+                    if (rsp.code != 0) {
+                        alert("停止失败！")
+                    }
+                })  
+            }
+        }
+        
+        function exit() {
+            location.reload()
+        }
+        
+        $(".btn").hover(function(){
+            $(this).css("opacity","0.7");
+        },function(){
+            $(this).css("opacity","1");
+        })
+    </script>
+</body>
+    
+</html>

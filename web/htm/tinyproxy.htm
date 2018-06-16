@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>小米路由器插件中心</title>
+    <link href="<%=resource%>/web/css/style.css?v=<%=ver%>" rel="stylesheet">
+    <script type="text/javascript" src="<%=resource%>/web/js/jquery-3.2.1.min.js"></script>
+
+
+</head>
+    
+<body>
+
+    <div class="head">
+       <h1>小米路由器插件中心</h4>
+    </div>
+    <div class="content">
+        <div class="frame">
+            <div class="doc">
+                <div class="linetype linestyle1">
+                    <a class="info">Tinyproxy</a>
+                    <button type="button" onclick="history.back()" class="back btn">返回</button>
+                </div>
+                <div class="linetype">
+                    <a class="info">启动服务</a>
+                    <input type="checkbox" class="setinfo" id="checkbox" checked/>
+                </div>
+                <div class="linetype linelast">
+                    <a class="info">运行状态</a>
+                    <a class="setinfo" id="status">未运行</a>
+                </div>
+            </div>
+
+            <div class="end">
+                <button type="button" class="save btn" onclick="save()">保存</button>
+                <button type="button" class="exit btn" onclick="exit()">取消</button>
+            </div>
+        </div>
+    </div>
+   
+    <script type="text/javascript">
+//        function getcheckbox(){
+//        var test = document.getElementById("checkbox").checked;
+//        if(test==true){
+//            alert("正在运行中，请稍等...");
+//        }else{
+//            alert("bad");
+//        }
+//        }
+        $(function(){ 
+            $(".frame").fadeIn(500);
+            $("#status").css("color", "red")
+            $.getJSON('<%=luci.dispatcher.build_url("api","monlor","tinyproxy_get")%>', {}, function(rsp) {
+                var status = rsp.status;
+                var enable = rsp.enable;
+              
+                if (rsp.status!=0){
+                    document.getElementById("status").innerHTML="运行中";
+                    $("#status").css("color", "green")
+                }
+                
+                if (rsp.enable==0){
+                    document.getElementById("checkbox").removeAttribute("checked");
+                }else{
+                    document.getElementById("checkbox").setAttribute("checked");
+                }
+            });
+            
+        });
+        
+        
+        
+        function save() {
+            
+            var test = document.getElementById("checkbox").checked;
+            if(test==true){
+                alert("正在运行中，3秒后刷新页面...");
+		$.getJSON('<%=luci.dispatcher.build_url("api","monlor","tinyproxy_start")%>')
+            }else{
+                alert("正在停止服务，3秒后刷新页面...");
+		$.getJSON('<%=luci.dispatcher.build_url("api","monlor","tinyproxy_stop")%>')  
+            }
+            setTimeout(function() {
+            	location.reload()
+            }, 3000);
+        }
+        
+        function exit() {
+            location.reload()
+        }
+        
+        $(".btn").hover(function(){
+            $(this).css("opacity","0.7");
+        },function(){
+            $(this).css("opacity","1");
+        })
+    </script>
+</body>
+    
+</html>

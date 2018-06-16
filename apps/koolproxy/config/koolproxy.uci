@@ -1,0 +1,5 @@
+appname=koolproxy
+uci set monlor.$appname=config
+uci set monlor.$appname.service=KoolProxy
+uci set monlor.$appname.appname="$appname"
+uci set monlor.$appname.tools="2.5.28"

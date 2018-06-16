@@ -1,0 +1,5 @@
+uciset="uci set monlor.qiandao"
+$uciset=config
+$uciset.service="QianDao"
+$uciset.appname="qiandao"
+$uciset.tools="2.6.10"

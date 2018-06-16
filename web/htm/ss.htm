@@ -1,0 +1,193 @@
+<%
+--[[
+    Info    ShadowSocks
+]]--
+local ver = require("xiaoqiang.XQVersion").webVersion
+local uci = require("luci.model.uci").cursor()
+local version = tostring(uci:get("monlor", "shadowsocks", "version"))
+%>
+<%include("web/inc/head")%> 
+    <meta charset="UTF-8">
+    <title>小米路由器插件中心</title>
+    <link href="<%=resource%>/web/css/bc.css?v=<%=ver%>" rel="stylesheet">
+    <link href="/backup/log/css/monlor-style.css?v=<%=ver%>" rel="stylesheet">
+</head>
+    
+<body>
+   
+<div id="doc">
+    <%include("web/inc/header")%>
+
+    <div id="bd">
+        <div class="frame">
+            <div class="content">
+                <div class="linetype linestyle1">
+                    <span>ShadowSocks</span>
+                    <button type="button" onclick="history.back()" class="back btn">返回</button>
+                </div>
+                <div class="linetype">
+                    <span class="info">启动服务：</span>
+                    <input type="checkbox" class="setinfo" id="ssenable" checked/>
+                </div>
+                <div class="linetype">
+                    <span class="info">运行状态：</span>
+                    <span class="setinfo">
+                        <a id="status" >获取中...</a>
+                        <a style="color: gray;">&nbsp;VER:<%=version%></a>
+                    </span>
+                </div>
+                <div class="linetype">
+                    <span class="info">代理节点：</span>
+                    <select class="setinfo" id="select_ssid">
+                        <option>请选择</option>
+                    </select>
+                </div>
+                <div class="linetype">
+                    <span class="info">运行模式：</span>
+                    <select class="setinfo" id="select_ssmode">
+                        <option>请选择</option>
+                        <option value="gfwlist">黑名单模式</option>
+                        <option value="whitelist">白名单模式</option>
+                        <option value="wholemode">全局模式</option>
+                    </select>
+                </div>
+                <div class="linetype">
+                    <span class="info">启动游戏加速：</span>
+                    <input type="checkbox" class="setinfo" id="ssgenable" checked/>
+                </div>
+                <div class="linetype">
+                    <span class="info">游戏加速节点：</span>
+                    <select class="setinfo" id="select_ssgid">
+                        <option>请选择</option>
+                    </select>
+                </div>
+                <div class="linetype linelast">
+                    <span class="info">游戏加速模式：</span>
+                    <select class="setinfo" id="select_ssgmode">
+                        <option>请选择</option>
+                        <option value="cngame">国内游戏模式</option>
+                        <option value="frgame">海外游戏模式</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="end">
+                <button type="button" class="save btn" onclick="save()">保存</button>
+                <button type="button" class="exit btn" onclick="exit()">取消</button>
+            </div>
+        </div>
+    </div>
+    <%include("web/inc/footer")%>
+    <%include("web/inc/g.js")%>
+   
+    <script type="text/javascript">
+//        function getcheckbox(){
+//        var test = document.getElementById("checkbox").checked;
+//        if(test==true){
+//            alert("正在运行中，请稍等...");
+//        }else{
+//            alert("bad");
+//        }
+//        }
+        $(function(){ 
+            $(".frame").fadeIn(400);
+          
+            $.getJSON('<%=luci.dispatcher.build_url("api","monlor","ss_get")%>', {}, function(rsp) {
+                var status = rsp.status;
+                var enable = rsp.enable;
+                var ssgena = rsp.ssgena;
+                var ssid = rsp.ssid;
+                var ssgid = rsp.ssgid;
+                var ssmode = rsp.ssmode;
+                var ssgmode = rsp.ssgmode;
+                if (rsp.status==1){
+                    $("#status").html("运行中");
+                    $("#status").css("color", "green")
+                }else{
+                    $("#status").html("未运行");
+                    $("#status").css("color", "red")
+                }
+                
+                if (rsp.enable==1){
+                    $("#ssenable").attr("checked");
+                }else{
+                    $("#ssenable").removeAttr("checked");
+                }
+                if (rsp.ssgena==1){
+                    $("#ssgenable").attr("checked");
+                }else{
+                    $("#ssgenable").removeAttr("checked");
+                }
+
+                var sslist = rsp.sslist;
+                var html = "";
+                for (var i = 0; i < sslist.length; i++) {
+                    if(sslist[i] != "") {
+                        html += "<option value=" + sslist[i] + ">" + sslist[i] + "</option>";
+                    }
+                }
+                $("#select_ssid").append(html);
+                $("#select_ssgid").append(html);
+                $("#select_ssid").val(ssid);
+                $("#select_ssgid").val(ssgid);
+                $("#select_ssmode").val(ssmode);
+                $("#select_ssgmode").val(ssgmode);
+            });
+            
+        });
+        
+        
+        
+        function save() {
+            var ssenable = $("#ssenable").is(':checked')
+            var tpldata = {
+                enable: '',
+                ssid: '',
+                ssmode: '',
+                ssgena: '',
+                ssgid: '',
+                ssgmode: ''
+            };
+            (ssenable == true)?tpldata.enable = 1:tpldata.enable = 0;
+            tpldata.ssid = $("#select_ssid").val();
+            tpldata.ssmode = $("#select_ssmode").val();
+            ($("#ssgenable").is(':checked'))?tpldata.ssgena = 1:tpldata.ssgena = 0;
+            tpldata.ssgid = $("#select_ssgid").val();
+            tpldata.ssgmode = $("#select_ssgmode").val();
+            if(ssenable==true){
+                // alert("正在启动服务，3秒后刷新页面...");
+                $.pub( 'loading:start' );
+                $.getJSON('<%=luci.dispatcher.build_url("api","monlor","ss_start")%>', tpldata, function(rsp){
+                    $.pub( 'loading:stop' );
+                    location.reload()
+                    if (rsp.code != 0) {
+                        alert("启动失败！")
+                    }
+                })
+            }else{
+                $.pub( 'loading:start' );
+                $.getJSON('<%=luci.dispatcher.build_url("api","monlor","ss_stop")%>', tpldata, function(rsp){
+                    $.pub( 'loading:stop' );
+                    location.reload()
+                    if (rsp.code != 0) {
+                        alert("停止失败！")
+                    }
+                })  
+            }
+        }
+        
+        function exit() {
+            location.reload()
+        }
+        
+        $(".btn").hover(function(){
+            $(this).css("opacity","0.8");
+        },function(){
+            $(this).css("opacity","1");
+        })
+        
+        
+    </script>
+</body>
+    
+</html>

@@ -1,0 +1,7 @@
+monlorpath=$(uci -q get monlor.tools.path)
+profilepath=$(uci -q get monlor.tools.profilepath) || profilepath="$monlorpath/scripts"
+libpath=$(uci -q get monlor.tools.libpath) || libpath="/usr/lib:/lib"
+
+export PATH=$PATH:$profilepath
+export LD_LIBRARY_PATH=$libpath
+export TERM=xterm

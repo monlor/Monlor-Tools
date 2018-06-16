@@ -1,0 +1,16 @@
+192.30.253.112 github.com #monlor-hosts
+192.30.253.119 gist.github.com #monlor-hosts
+151.101.100.133 assets-cdn.github.com #monlor-hosts
+151.101.100.133 raw.githubusercontent.com #monlor-hosts
+151.101.100.133 gist.githubusercontent.com #monlor-hosts
+151.101.100.133 cloud.githubusercontent.com #monlor-hosts
+151.101.100.133 camo.githubusercontent.com #monlor-hosts
+151.101.100.133 collector.githubapp.com #monlor-hosts
+151.101.100.133 avatars0.githubusercontent.com #monlor-hosts
+151.101.100.133 avatars1.githubusercontent.com #monlor-hosts
+151.101.100.133 avatars2.githubusercontent.com #monlor-hosts
+151.101.100.133 avatars3.githubusercontent.com #monlor-hosts
+151.101.100.133 avatars4.githubusercontent.com #monlor-hosts
+151.101.100.133 avatars5.githubusercontent.com #monlor-hosts
+151.101.100.133 avatars6.githubusercontent.com #monlor-hosts
+151.101.100.133 avatars7.githubusercontent.com #monlor-hosts
