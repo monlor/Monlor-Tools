@@ -12,7 +12,6 @@ getapp() {
 	[ "$force" == '0' ] && checkuci $appname && logsh "【Tools】" "插件【$appname】已经安装！" && exit
 	if [ -z "`echo $2 | grep -E "/|\."`" ]; then #检查是否安装在线插件
 		#下载插件
-		logsh "【Tools】" "以在线的方式安装插件..."
 		logsh "【Tools】" "下载【$appname】安装文件"
 		wgetsh "/tmp/$appname.tar.gz" "$monlorurl/appstore/$appname.tar.gz"
 		if [ $? -eq 1 ]; then
@@ -58,21 +57,13 @@ add() {
 			exit
 		fi
 	fi
-	
-	#检查applist是否存在插件
-	# result=$(cat $monlorpath/config/applist.txt | grep -c "^$appname$")
-	# if [ "$result" == '0' ]; then
-	# 	[ -f $monlorpath/config/applist_extra.txt ] && touch $monlorpath/config/applist_extra.txt
-	# 	result=$(cat $monlorpath/config/applist_extra.txt | grep -c "^$appname$")
-	# 	[ "$result" == '0' ] && echo "$appname" >> $monlorpath/config/applist_extra.txt
-	# fi
-	# 添加applist插件
+	#添加到插件列表
 	sed -i "/^$appname$/d" $monlorpath/config/applist.txt
 	echo "$appname" >> $monlorpath/config/applist.txt
 	#赋予可执行权限
 	chmod +x -R /tmp/$appname/
 
-	logsh "【Tools】" "初始化uci配置"
+	logsh "【Tools】" "初始化uci配置信息"
 	#初始化uci配置	
 	if [ ! -f /tmp/$appname/config/$appname.uci ]; then
 		uci set monlor.$appname=config
@@ -88,7 +79,7 @@ add() {
 			rm -rf /tmp/$appname.tar.gz
 			exit
 		else
-			logsh "【Tools】" "工具箱版本($monlorver)满足安装要求"
+			logsh "【Tools】" "工具箱版本[$monlorver]满足安装要求"
 		fi
 	fi
 	#添加版本信息
@@ -113,6 +104,12 @@ add() {
 	rm -rf /tmp/$appname
 	rm -rf /tmp/$appname.tar.gz
 	logsh "【Tools】" "插件【$appname】安装完成！"
+	newinfo="$(uci -q get monlor.$appname.newinfo)"
+	if [ -n "$newinfo" ]; then
+		echo -e "-----------------------------------------"
+		echo -e "$newinfo"
+		echo -e "-----------------------------------------"
+	fi
  
 }
 
@@ -133,7 +130,8 @@ upgrade() {
 		rm -rf /tmp/version.txt
 	fi
 	#停止插件
-	$monlorpath/apps/$appname/script/$appname.sh stop > /dev/null 2>&1
+	logsh "【Tools】" "停止【$appname】插件..."
+	$monlorpath/apps/$appname/script/$appname.sh stop &> /dev/null
 	#先获取插件包
 	force=1 && getapp
 	#安装服务
@@ -153,9 +151,10 @@ del() {
 		read answer
 		[ "$answer" == "n" ] && exit
 	fi
-	$monlorpath/apps/$appname/script/$appname.sh stop > /dev/null 2>&1
+	logsh "【Tools】" "停止【$appname】插件..."
+	$monlorpath/apps/$appname/script/$appname.sh stop &> /dev/null
 	#删除插件的配置
-	logsh "【Tools】" "正在卸载【$appname】插件..."
+	logsh "【Tools】" "清除插件uci配置信息"
 	uci -q del monlor.$appname
 	uci commit monlor
 	# 清除非工具箱自带插件的list
@@ -168,18 +167,28 @@ del() {
 	# 清除插件列表中的插件信息
 	sed -i "/^$appname$/d" $monlorpath/config/applist.txt
 	# 删除插件文件
+	logsh "【Tools】" "删除插件文件"
 	rm -rf $monlorpath/apps/$appname > /dev/null 2>&1
 	# sed -i "/script\/$appname/d" $monlorpath/scripts/dayjob.sh
 	# install_line=`cat $monlorconf | grep -n install_$appname | cut -d: -f1`           
  	# [ ! -z "$install_line" ] && sed -i ""$install_line"s/1/0/" $monlorconf 
-        logsh "【Tools】" "插件【$appname】卸载完成"
+    logsh "【Tools】" "插件【$appname】卸载完成"
 
 }
  
 
 case $1 in
-	add) getapp && add ;;
-	upgrade) upgrade ;;
-	del) del ;;
+	add) 
+		logsh "【Tools】" "开始安装【$appname】插件..."
+		getapp && add 
+		;;
+	upgrade) 
+		logsh "【Tools】" "开始更新【$appname】插件..."
+		upgrade 
+		;;
+	del)
+		logsh "【Tools】" "开始卸载【$appname】插件..."
+		del 
+		;;
 	*) echo "Usage: $0 {add|upgrade|del} appname"
 esac

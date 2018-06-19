@@ -70,7 +70,12 @@ start() {
                         echo "-------------------------------"
                         cd $BIN && ./$appname 2>&1 | tee $LOG/$appname.log
                         echo "-------------------------------"
-                        [ -z "$(cat $LOG/$appname.log | grep panic)" ] && break || logsh "【$service】" "出错了，尝试重新启动..."
+                        if [ -z "$(cat $LOG/$appname.log | grep panic)" ]; then 
+                                break 
+                        else
+                                logsh "【$service】" "出错了，1秒后尝试重新启动..."
+                                sleep 1
+                        fi
                         let i=$i-1
                         [ "$i" -eq 0 ] && logsh "【$service】" "启动$appname服务失败！" && exit 1
                 done
@@ -113,10 +118,10 @@ restart() {
 
 status() {
 
-        if [ -z "$(cru l | grep $appname)" -a ! -f $BIN/cookie.txt ]; then
-                echo -e "未运行\n0"
+        if [ -n "$(cru l | grep $appname)" -a -f $BIN/cookie.txt ]; then
+                echo -e "运行中，每天$qiandao_time点自动签到\n1"
         else
-                echo -e "运行中\n1"
+                echo -e "未运行\n0"
         fi
 }
 

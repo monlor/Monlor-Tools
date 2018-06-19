@@ -12,11 +12,11 @@ service=EasyExplorer
 appname=easyexplorer
 EXTRA_COMMANDS=" status backup recover"
 EXTRA_HELP="        status  Get $appname status"
-port=8890
 BIN=$monlorpath/apps/$appname/bin/$appname
 # CONF=$monlorpath/apps/$appname/config/$appname.conf
 LOG=/var/log/$appname.log
 path=$(uci -q get monlor.$appname.share_path) || path="$userdisk"
+port=$(uci -q get monlor.$appname.port) || port=8890
 
 set_config() {
 
@@ -43,12 +43,13 @@ start () {
 	set_config
 	
 	#iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
-	service_start $BIN -fe 0.0.0.0:$port -u $token -share $path
+	service_start $BIN -fe 0.0.0.0:$port -u $token -share $path -c /tmp
 	if [ $? -ne 0 ]; then
         logsh "【$service】" "启动$appname服务失败！"
 		exit
     fi
     logsh "【$service】" "启动$appname服务完成！"
+    logsh "【$service】" "请在浏览器中访问[http://$lanip:$port]"
 
 }
 
@@ -76,7 +77,7 @@ status() {
 		echo "未运行"
 		echo "0"
 	else
-		echo "文件共享目录: $path"
+		echo "运行端口号：$port，共享目录: $path"
 		echo "1"
 	fi
 

@@ -118,7 +118,7 @@ manage() {
 			echo "********* 卸载插件 ***********"
 			echo "00. 返回"
 			i=1
-			cat $Applist | while read line
+			cat $Applist | sort | while read line
 			do
 				[ "$i" -lt "10" ] && k="0$i" || k="$i"
 				echo "$k. $line"
@@ -131,8 +131,8 @@ manage() {
 					manage
 				else
 					result=$(echo $res | grep -c "^[0-9][0-9]*$")
-					if [ "$result" == '1' ]; then
-						appname=$(cat $Applist | sed -n "$res"p)
+					if [ "$result" != '0' ]; then
+						appname=$(cat $Applist | sort | sed -n "$res"p)
 						[ ! -z "$appname" ] && appmanage.sh del $appname
 					fi 
 				fi
@@ -255,7 +255,6 @@ manage() {
 }
 
 menulist() {
-	title
 	echo "00. 管理菜单(Ctrl + c退出)"
 	if [ ! -f $Applist ]; then
 		echo "[未找到插件列表，尝试修复中...]" 
@@ -273,11 +272,11 @@ menulist() {
 		do
 			if checkuci $line; then
 				let i=$i+1
-	                        args="\t"
-	                        [ "$i" -ge 10 ] && head="$i. $line" || head="0$i. $line"
-	                        [ "${#head}" -lt 8 ] && args="\t\t"
-	                        [ "${#head}" -eq 16 ] && args=""
-	                        echo -e "$head$args`check_install $line` `check_update $line`"
+                args="\t"
+                [ "$i" -ge 10 ] && head="$i. $line" || head="0$i. $line"
+                [ "${#head}" -lt 8 ] && args="\t\t"
+                [ "${#head}" -eq 16 ] && args=""
+                echo -e "$head$args`check_install $line` `check_update $line`"
 			fi
 		done 
 		if [ -z "$(ls $monlorpath/apps)" ]; then
@@ -293,8 +292,9 @@ menu() {
 	do
 	clear
 	pssh c #清除ps缓存
+	title
 	menulist
-	compare $newver $monlorver && tmptext="[\033[36m输入u更新工具箱\033[0m]"
+	compare $newver $monlorver && tmptext="[\033[36m输入u更新工具箱\033[0m]" || tmptext=""
 	read -p "请输入你的选择`echo -e $tmptext`：" select
 	echo
 	[ "$select" == "exit" ] && exit

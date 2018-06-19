@@ -32,7 +32,7 @@
 #### 	一键安装命令
 	sh -c "$(curl -kfsSl https://coding.net/u/monlor/p/Monlor-Tools/git/raw/master/install.sh)" && source /etc/profile &> /dev/null
 
-## 工具箱命令(命令请勿用大写字母)：
+## 工具箱命令：
 	1. 卸载：uninstall.sh （不推荐）
 	2. 更新：update.sh [-f] (不推荐)
 	3. 初始化：init.sh 

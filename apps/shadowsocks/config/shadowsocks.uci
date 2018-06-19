@@ -3,3 +3,4 @@ uci set monlor.$appname=config
 uci set monlor.$appname.service=ShadowSocks
 uci set monlor.$appname.appname="$appname"
 uci set monlor.$appname.tools="2.6.13"
+uci set monlor.$appname.newinfo="修改了插件gfwlist和chnroute规则地址"

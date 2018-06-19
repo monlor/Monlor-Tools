@@ -378,19 +378,13 @@ start() {
 }
 
 gfwlist_ipset() {
-	rm -rf /tmp/gfwlist_ipset.conf
-	cat $CONF/gfwlist.conf | while read line                                             
-	do                  
-		[ -z "$line" ] && continue                                                       
-		echo "server=/.$line/127.0.0.1#15353" >> /tmp/gfwlist_ipset.conf
-		echo "ipset=/.$line/gfwlist" >> /tmp/gfwlist_ipset.conf  
-	done    
-	ln -s /tmp/gfwlist_ipset.conf /etc/dnsmasq.d/gfwlist_ipset.conf
+	sed -i 's/7913/15353/g' $CONF/gfwlist.conf
+	ln -s $CONF/gfwlist.conf /etc/dnsmasq.d/gfwlist_ipset.conf
 	ipset -N gfwlist iphash -!
 }
 
 chnroute_ipset() {
-	sed -e "s/^/-A nogfwnet &/g" -e "1 i\-N nogfwnet hash:net" $CONF/chnroute.conf | ipset -R -!
+	sed -e "s/^/-A nogfwnet &/g" -e "1 i\-N nogfwnet hash:net" $CONF/chnroute.txt | ipset -R -!
 }
 
 ss_gfwlist() {
@@ -536,6 +530,7 @@ backup() {
 	mkdir -p $monlorbackup/$appname
 	cp -rf $CONF/ssserver* $monlorbackup/$appname/
 	cp -rf $CONF/sscontrol.conf $monlorbackup/$appname/sscontrol.conf
+	cp -rf $CONF/customize_* $monlorbackup/$appname/
 
 }
 
@@ -543,5 +538,6 @@ recover() {
 
 	cp -rf $monlorbackup/$appname/ssserver* $CONF/
 	cp -rf $monlorbackup/$appname/sscontrol.conf $CONF/sscontrol.conf
+	cp -rf $monlorbackup/$appname/customize_* $CONF/
 
 }

@@ -1,0 +1,6 @@
+uciset="uci set monlor.zerotier"
+$uciset=config
+$uciset.service="ZeroTier"
+$uciset.appname="zerotier"
+$uciset.tools="2.6.16"
+$uciset.appinfo="一款非常简单易用的内网穿透工具"

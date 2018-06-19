@@ -22,6 +22,7 @@ uciset="uci set monlor.$appname"
 \$uciset.appname="$appname"
 \$uciset.tools="$tools"
 \$uciset.appinfo="$appinfo"
+\$uciset.newinfo=""
 EOF
 echo "生成工具箱配置文件..."
 cat > $appname/config/monlor.conf <<EOF
@@ -65,10 +66,9 @@ start() {
         logsh "【\$service】" "正在启动\$appname服务... "
         # cru a "\$appname" "0 6 * * * \$monlorpath/apps/\$appname/script/\$appname.sh restart"
         # Scripts Here
-
         # iptables -I INPUT -p tcp --dport \$port -m comment --comment "monlor-\$appname" -j ACCEPT 
         service_start \$BIN/\$appname
-        [ \$? -ne 0 ] && logsh "【\$service】" "启动\$appname服务失败！" && exit 1
+        [ \$? -ne 0 ] && logsh "【\$service】" "启动\$appname服务失败！" && end
         logsh "【\$service】" "启动\$appname服务完成！"
         
 }
@@ -91,6 +91,15 @@ destroy() {
 
 }
 
+end() {
+
+        stop
+        uci set monlor.\$appname.enable=0
+        uci commit monlor
+        exit 1
+
+}
+
 restart() {
 
         stop 
@@ -101,22 +110,24 @@ restart() {
 
 status() {
 
-        if [ -z "\$(pidof \$appname)" ]; then
-                echo -e "未运行\n0"
-        else
+        if [ -n "\$(pidof \$appname)" ]; then
                 echo -e "运行中\n1"
+        else
+                echo -e "未运行\n0"
         fi
 }
 
 backup() {
 
         mkdir -p \$monlorbackup/\$appname
+        # Backup scripts here
         return
 
 }
 
 recover() {
 
+        # Recover scripts here
         return
 
 }
