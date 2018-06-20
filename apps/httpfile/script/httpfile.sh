@@ -101,7 +101,7 @@ start () {
 	result2=$(ls /opt | grep etc)
 	if [ -z "$result1" ] || [ -z "$result2" ]; then 
 		logsh "【$service】" "检测到【Entware】服务未启动或未安装"
-		exit
+		end
 	else
 		result3=$(echo $PATH | grep opt)
 		[ -z "$result3" ] && export PATH=/opt/bin/:/opt/sbin:$PATH
@@ -140,6 +140,15 @@ stop () {
 destroy() {
 	#清除entware识别
 	sed -i "/$appname/d" $monlorpath/apps/entware/config/relyon.txt 
+}
+
+end() {
+
+        stop
+        uci set monlor.\$appname.enable=0
+        uci commit monlor
+        exit 1
+
 }
 
 restart () {

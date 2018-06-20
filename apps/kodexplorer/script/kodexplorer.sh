@@ -144,7 +144,7 @@ start () {
 	result2=$(ls /opt | grep etc)
 	if [ -z "$result1" ] || [ -z "$result2" ]; then 
 		logsh "【$service】" "检测到【Entware】服务未启动或未安装"
-		exit
+		end
 	else
 		result3=$(echo $PATH | grep opt)
 		[ -z "$result3" ] && export PATH=/opt/bin/:/opt/sbin:$PATH
@@ -184,6 +184,15 @@ stop () {
 	# kill -9 $(ps | grep 'nginx' | grep -v sysa | grep -v grep | awk '{print$1}') > /dev/null 2>&1
 	umount -lf $WWW/data/User/admin/home > /dev/null 2>&1
 	iptables -D INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT > /dev/null 2>&1
+
+}
+
+end() {
+
+        stop
+        uci set monlor.\$appname.enable=0
+        uci commit monlor
+        exit 1
 
 }
 
