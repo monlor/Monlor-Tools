@@ -90,11 +90,11 @@ start () {
 		logsh "【$service】" "$appname已经在运行！"
 		exit 1
 	fi
-	result=$(ps | grep entware.sh | grep -v grep | wc -l)
-    	if [ "$result" != '0' ];then
-		logsh "【$service】" "检测到【Entware】正在运行，现在启用$appname可能会冲突"
-		exit 1
-	fi
+	# result=$(ps | grep entware.sh | grep -v grep | wc -l)
+ #    	if [ "$result" != '0' ];then
+	# 	logsh "【$service】" "检测到【Entware】正在运行，现在启用$appname可能会冲突"
+	# 	exit 1
+	# fi
 	logsh "【$service】" "正在启动$appname服务... "
 	# 检查entware
 	result1=$(uci -q get monlor.entware)
