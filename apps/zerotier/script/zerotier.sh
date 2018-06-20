@@ -30,7 +30,7 @@ start() {
                 [ $? -ne 0 ] && logsh "【$service】" "安装失败！请检查Entware环境！" && exit 1
         fi
         #添加entware识别
-        sed -i '/$appname/d' $monlorpath/apps/entware/config/relyon.txt &> /dev/null
+        sed -i "/$appname/d" $monlorpath/apps/entware/config/relyon.txt &> /dev/null
         echo "$appname" >> $monlorpath/apps/entware/config/relyon.txt
         # iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
         service_start $ZTO -d && sleep 1 && $ZTC join $networkid &> /dev/null
@@ -54,7 +54,7 @@ destroy() {
         # End app, Scripts here 
         cru d "$appname"
         #清除entware识别
-        sed -i '/$appname/d' $monlorpath/apps/entware/config/relyon.txt 
+        sed -i "/$appname/d" $monlorpath/apps/entware/config/relyon.txt 
         return
 
 }

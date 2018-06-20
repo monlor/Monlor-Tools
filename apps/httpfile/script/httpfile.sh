@@ -79,7 +79,7 @@ set_config() {
 		iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
 	done
 	#添加entware识别
-	sed -i '/$appname/d' $monlorpath/apps/entware/config/relyon.txt &> /dev/null
+	sed -i "/$appname/d" $monlorpath/apps/entware/config/relyon.txt &> /dev/null
 	echo "$appname" >> $monlorpath/apps/entware/config/relyon.txt
 }
 
@@ -139,7 +139,7 @@ stop () {
 
 destroy() {
 	#清除entware识别
-	sed -i '/$appname/d' $monlorpath/apps/entware/config/relyon.txt 
+	sed -i "$appname/d" $monlorpath/apps/entware/config/relyon.txt 
 }
 
 restart () {
