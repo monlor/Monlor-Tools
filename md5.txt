@@ -17,5 +17,5 @@ MD5 (./qiandao.tar.gz) = 40865d760a5d51a02f47a815b67f727c
 MD5 (./shadowsocks.tar.gz) = ea5d75909b0f555d137ef298f138d832
 MD5 (./zerotier.tar.gz) = 5617a625ed78797d656cb8be5b3e16ed
 MD5 (./entware.tar.gz) = f17769849b8571c3d50bfd524a8f727b
-MD5 (./httpfile.tar.gz) = 40d221fdfd5eafeee753d85eee94eba2
-MD5 (./kodexplorer.tar.gz) = 0ef8ec137cf6d14ce2274b1e095962d7
+MD5 (./kodexplorer.tar.gz) = b089dbc4c3dae926bf849efef174b20b
+MD5 (./httpfile.tar.gz) = 65f63d3b9dbe39e459094e6b8e6dfb7b
