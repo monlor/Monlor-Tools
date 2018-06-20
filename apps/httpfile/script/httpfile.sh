@@ -139,7 +139,7 @@ stop () {
 
 destroy() {
 	#清除entware识别
-	sed -i "$appname/d" $monlorpath/apps/entware/config/relyon.txt 
+	sed -i "/$appname/d" $monlorpath/apps/entware/config/relyon.txt 
 }
 
 restart () {
