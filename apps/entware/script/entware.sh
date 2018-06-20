@@ -81,6 +81,16 @@ start () {
 	 	exit
 	else
 		logsh "【$service】" "$appname服务启动完成"
+		if [ -f $CONF/relyon.txt ] && [ -n "$(cat $CONF/relyon.txt)" ]; then
+			logsh "【$service】" "启动依赖$appname的所有插件..."
+			cat $CONF/relyon.txt | while read line
+			do
+				[ -z "$line" ] && continue
+				uci set monlor.$line.enable=1
+				$monlorpath/apps/$line/script/$line.sh restart
+			done
+			uci commit monlor
+		fi
 	fi
 
 }
@@ -105,8 +115,9 @@ destroy() {
 			cat $CONF/relyon.txt | while read line
 			do
 				[ -z "$line" ] && continue
-				uci set monlor.$line.enable=0
 				$monlorpath/apps/$line/script/$line.sh stop
+				# 后将enable置为0不会运行destroy方法，保存依赖entware的插件列表
+				uci set monlor.$line.enable=0
 			done
 		fi
 		uci -q set monlor.tools.profilepath="`echo $profilepath | sed -e 's#:/opt/bin:/opt/sbin##g'`"
