@@ -76,10 +76,10 @@ start() {
 stop() {
 
         logsh "【\$service】" "正在停止\$appname服务... "
+        [ "\$enable" == '0' ] && destroy
         service_stop \$BIN/\$appname
         kill -9 "\$(pidof \$appname)"
         # iptables -D INPUT -p tcp --dport \$port -m comment --comment "monlor-\$appname" -j ACCEPT > /dev/null 2>&1
-        [ "\$enable" == '0' ] && destroy
 
 }
 

@@ -29,6 +29,9 @@ start() {
                 $OPKG install $appname
                 [ $? -ne 0 ] && logsh "【$service】" "安装失败！请检查Entware环境！" && exit 1
         fi
+        #添加entware识别
+        sed -i '/$appname/d' $monlorpath/apps/entware/config/relyon.txt &> /dev/null
+        echo "$appname" >> $monlorpath/apps/entware/config/relyon.txt
         # iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
         service_start $ZTO -d && sleep 1 && $ZTC join $networkid &> /dev/null
         [ $? -ne 0 ] && logsh "【$service】" "启动$appname服务失败！" && end
@@ -50,6 +53,8 @@ destroy() {
         
         # End app, Scripts here 
         cru d "$appname"
+        #清除entware识别
+        sed -i '/$appname/d' $monlorpath/apps/entware/config/relyon.txt 
         return
 
 }

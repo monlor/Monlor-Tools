@@ -78,6 +78,9 @@ set_config() {
 		logsh "【$service】" "加载$appname配置:[端口号:$port, 路径:$path]"
 		iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
 	done
+	#添加entware识别
+	sed -i '/$appname/d' $monlorpath/apps/entware/config/relyon.txt &> /dev/null
+	echo "$appname" >> $monlorpath/apps/entware/config/relyon.txt
 }
 
 start () {
@@ -120,6 +123,7 @@ start () {
 stop () {
 
 	logsh "【$service】" "正在停止$appname服务... "
+	[ "$(uci -q get monlor.$appname.enable)" == '0' ] && destroy
 	rm -rf $CONF
 	result1=$(uci -q get monlor.kodexplorer.enable)
 	result2=$(uci -q get monlor.$appname.enable)
@@ -131,6 +135,11 @@ stop () {
 	iptables -S | grep monlor-$appname |  sed -e "s/-A/iptables -D/g" > /tmp/clean.sh
 	chmod +x /tmp/clean.sh && /tmp/clean.sh && rm -rf /tmp/clean.sh
 
+}
+
+destroy() {
+	#清除entware识别
+	sed -i '/$appname/d' $monlorpath/apps/entware/config/relyon.txt 
 }
 
 restart () {

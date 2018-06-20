@@ -120,6 +120,10 @@ set_config() {
 			logsh "【$service】" "检测到$appname服务未配置，无法挂载管理目录"
 		fi
 	fi
+
+	#添加entware识别
+	sed -i '/$appname/d' $monlorpath/apps/entware/config/relyon.txt &> /dev/null
+	echo "$appname" >> $monlorpath/apps/entware/config/relyon.txt
 }
 
 start () {
@@ -168,6 +172,7 @@ start () {
 stop () {
 
 	logsh "【$service】" "正在停止$appname服务... "
+	[ "$(uci -q get monlor.$appname.enable)" == '0' ] && destroy
 	rm -rf $CONF
 	result=$(uci -q get monlor.httpfile.enable)
 	if [ "$result" == '1' ]; then
@@ -180,6 +185,11 @@ stop () {
 	umount -lf $WWW/data/User/admin/home > /dev/null 2>&1
 	iptables -D INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT > /dev/null 2>&1
 
+}
+
+destroy() {
+	#清除entware识别
+	sed -i '/$appname/d' $monlorpath/apps/entware/config/relyon.txt 
 }
 
 restart () {

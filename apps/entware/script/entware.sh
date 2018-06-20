@@ -88,9 +88,9 @@ start () {
 stop () {
 
 	logsh "【$service】" "正在停止$appname服务... "
+	[ "$enable" == '0' ] && destroy
 	$BIN stop >> /tmp/messages 2>&1
 	[ -f $BIN ] && umount -lf /opt
-	destroy
 	# ps | grep $BIN | grep -v grep | awk '{print$1}' | xargs kill -9 > /dev/null 2>&1
 	# iptables -D INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT > /dev/null 2>&1
 	logsh "【$service】" "停止成功，请运行source /etc/profile使配置生效!"
@@ -100,6 +100,15 @@ stop () {
 
 destroy() {
 	if [ "$enable" == '0' ]; then
+		logsh "【$service】" "关闭依赖$appname的所有插件..."
+		if [ -f $CONF/relyon.txt ]; then
+			cat $CONF/relyon.txt | while read line
+			do
+				[ -z "$line" ] && continue
+				uci set monlor.$line.enable=0
+				$monlorpath/apps/$line/script/$line.sh stop
+			done
+		fi
 		uci -q set monlor.tools.profilepath="`echo $profilepath | sed -e 's#:/opt/bin:/opt/sbin##g'`"
 		uci -q set monlor.tools.libpath="`echo $libpath | sed -e 's#:/opt/lib##g'`"
 		uci commit monlor
