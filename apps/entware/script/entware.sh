@@ -55,6 +55,7 @@ init() {
 		source /etc/profile > /dev/null 2>&1
 		logsh "【$service】" "安装完成，请运行source /etc/profile使配置生效!"
 	fi
+	echo >> $monlorpath/config/profile
 	[ -z "$(cat $monlorpath/config/profile | grep "alias opkg")" ] && echo "alias opkg=/opt/bin/opkg" >> $monlorpath/config/profile
 	[ -z "$(alias | grep opkg)" ] && logsh "【$service】" "未覆盖系统opkg程序，请运行source /etc/profile！"
 }
@@ -84,7 +85,9 @@ start () {
 			do
 				[ -z "$line" ] && continue
 				uci set monlor.$line.enable=1
-				$monlorpath/apps/$line/script/$line.sh restart
+				if [ "$($monlorpath/apps/$line/script/$line.sh status | tail -1)" == '0' ]; then
+					$monlorpath/apps/$line/script/$line.sh restart
+				fi
 			done
 			uci commit monlor
 		fi
