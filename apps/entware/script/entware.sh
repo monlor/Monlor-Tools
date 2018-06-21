@@ -55,11 +55,8 @@ init() {
 		source /etc/profile > /dev/null 2>&1
 		logsh "【$service】" "安装完成，请运行source /etc/profile使配置生效!"
 	fi
-	if [ -x /bin/opkg ]; then
-		mount -o remount,rw /
-		mv /bin/opkg /bin/opkg-cli
-		mount -o remount,ro /
-	fi
+	[ -z "$(cat $monlorpath/config/profile | grep "alias opkg")" ] && echo "alias opkg=/opt/bin/opkg" >> $monlorpath/config/profile
+	[ -z "$(alias | grep opkg)" ] && logsh "【$service】" "未覆盖系统opkg程序，请运行source /etc/profile！"
 }
 
 start () {
@@ -123,11 +120,7 @@ destroy() {
 		uci -q set monlor.tools.profilepath="`echo $profilepath | sed -e 's#:/opt/bin:/opt/sbin##g'`"
 		uci -q set monlor.tools.libpath="`echo $libpath | sed -e 's#:/opt/lib##g'`"
 		uci commit monlor
-		if [ -x /bin/opkg-cli ]; then
-			mount -o remount,rw /
-			mv /bin/opkg-cli /bin/opkg
-			mount -o remount,ro /
-		fi
+		sed -i "/alias opkg/d" $monlorpath/config/profile
 	fi
 }
 

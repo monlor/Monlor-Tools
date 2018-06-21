@@ -123,7 +123,7 @@ wgetsh() {
 	[ ! -d /tmp/monlortmp ] && mkdir -p /tmp/monlortmp
 	rm -rf /tmp/monlortmp/$wgetfilename
 	result=$(curl -skL -w %{http_code} -o "/tmp/monlortmp/$wgetfilename" "$wgeturl")
-	if [ "$result" == "200" ]; then
+	if [ $? -eq 0 -a "$result" == "200" ]; then
 		chmod +x /tmp/monlortmp/$wgetfilename > /dev/null 2>&1
 		mv -f /tmp/monlortmp/$wgetfilename $wgetfilepath > /dev/null 2>&1
 		return 0
