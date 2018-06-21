@@ -54,6 +54,7 @@ init() {
 		/opt/bin/opkg update
 		source /etc/profile > /dev/null 2>&1
 		logsh "【$service】" "安装完成，请运行source /etc/profile使配置生效!"
+		logsh "【$service】" "如需安装ONMP，参考https://github.com/monlor/ONMP"
 	fi
 	# echo >> $monlorpath/config/profile
 	if [ -z "$(cat $monlorpath/config/profile | grep "alias opkg")" ]; then
