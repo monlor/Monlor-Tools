@@ -124,6 +124,7 @@ destroy() {
 		uci -q set monlor.tools.libpath="`echo $libpath | sed -e 's#:/opt/lib##g'`"
 		uci commit monlor
 		sed -i "/alias opkg/d" $monlorpath/config/profile
+		unalias opkg &> /dev/null
 	fi
 }
 
