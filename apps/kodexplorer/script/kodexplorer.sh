@@ -28,8 +28,8 @@ set_config() {
 
 	for i in $opkg_list 
 	do
-		result=$(opkg list-installed | grep -c "^$i")
-		[ "$result" == '0' ] && opkg install $i
+		result=$(/opt/bin/opkg list-installed | grep -c "^$i")
+		[ "$result" == '0' ] && /opt/bin/opkg install $i
 	done
 	
 	if [ ! -f "$NGINXCONF".bak ]; then
@@ -92,7 +92,7 @@ set_config() {
 
 	if [ ! -f "$PHPCONF".bak ]; then
 		logsh "【$service】" "检测到php未配置, 正在配置..."
-		result=$(opkg list-installed | grep -c "^php7-cgi")
+		result=$(/opt/bin/opkg list-installed | grep -c "^php7-cgi")
 		[ "$result" == '0' ] && logsh "【$service】" "php未安装" && exit
 		[ ! -f "$PHPCONF" ] && logsh "【$service】" "未找到php配置文件！" && exit
 		cp $PHPCONF $PHPCONF.bak

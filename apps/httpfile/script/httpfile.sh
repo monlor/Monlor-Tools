@@ -20,8 +20,8 @@ LOG=/var/log/$appname.log
 
 set_config() {
 
-	result=$(opkg list-installed | grep -c "^nginx")
-	[ "$result" == '0' ] && opkg install nginx
+	result=$(/opt/bin/opkg list-installed | grep -c "^nginx")
+	[ "$result" == '0' ] && /opt/bin/opkg install nginx
 	if [ ! -f "$NGINXCONF".bak ]; then
 	 	logsh "【$service】" "检测到nginx未配置, 正在配置..."
 		#修改nginx配置文件
