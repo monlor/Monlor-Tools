@@ -18,4 +18,4 @@ MD5 (./shadowsocks.tar.gz) = ea5d75909b0f555d137ef298f138d832
 MD5 (./zerotier.tar.gz) = 5617a625ed78797d656cb8be5b3e16ed
 MD5 (./kodexplorer.tar.gz) = b089dbc4c3dae926bf849efef174b20b
 MD5 (./httpfile.tar.gz) = 65f63d3b9dbe39e459094e6b8e6dfb7b
-MD5 (./entware.tar.gz) = 42b7427f31f783d73cb80b546a5d670d
+MD5 (./entware.tar.gz) = 6770b9fa47ab4b2cf1befb3ae05e49aa

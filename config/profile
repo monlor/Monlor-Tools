@@ -5,3 +5,4 @@ libpath=$(uci -q get monlor.tools.libpath) || libpath="/usr/lib:/lib"
 export PATH=$PATH:$profilepath
 export LD_LIBRARY_PATH=$libpath
 export TERM=xterm
+#下面留空行

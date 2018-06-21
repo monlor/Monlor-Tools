@@ -55,7 +55,7 @@ init() {
 		source /etc/profile > /dev/null 2>&1
 		logsh "【$service】" "安装完成，请运行source /etc/profile使配置生效!"
 	fi
-	echo >> $monlorpath/config/profile
+	# echo >> $monlorpath/config/profile
 	[ -z "$(cat $monlorpath/config/profile | grep "alias opkg")" ] && echo "alias opkg=/opt/bin/opkg" >> $monlorpath/config/profile
 	[ -z "$(alias | grep opkg)" ] && logsh "【$service】" "未覆盖系统opkg程序，请运行source /etc/profile！"
 }

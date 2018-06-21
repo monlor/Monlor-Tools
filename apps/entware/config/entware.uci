@@ -2,4 +2,4 @@ appname=entware
 uci set monlor.$appname=config
 uci set monlor.$appname.service=Entware
 uci set monlor.$appname.appname="$appname"
-uci set monlor.$appname.tools="2.5.28"
+uci set monlor.$appname.tools="2.6.21"
