@@ -95,6 +95,7 @@ start () {
 			done
 			uci commit monlor
 		fi
+		[ "$onmp" == '1' ] && sh -c "$(curl -kfsSl https://raw.githubusercontent.com/xzhih/ONMP/master/oneclick.sh)"
 	fi
 
 }

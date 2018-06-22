@@ -3,3 +3,4 @@ uci set monlor.$appname=config
 uci set monlor.$appname.service=Entware
 uci set monlor.$appname.appname="$appname"
 uci set monlor.$appname.tools="2.6.21"
+uci set monlor.$appname.newinfo="增加了启动ONMP安装程序的选项"
