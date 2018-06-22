@@ -34,7 +34,7 @@ start() {
         echo "$appname" >> $monlorpath/apps/entware/config/relyon.txt
         # iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
         service_start $ZTO -d && sleep 1 && $ZTC join $networkid &> /dev/null
-        [ $? -ne 0 ] && logsh "【$service】" "启动$appname服务失败！" && end
+        [ $? -ne 0 ] && logsh "【$service】" "启动$appname服务失败！" && exit 1
         logsh "【$service】" "启动$appname服务完成！"
         
 }
@@ -61,9 +61,9 @@ destroy() {
 
 end() {
 
-        stop
         uci set monlor.$appname.enable=0
         uci commit monlor
+        stop
         exit 1
 
 }

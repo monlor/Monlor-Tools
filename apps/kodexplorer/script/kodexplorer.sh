@@ -189,9 +189,9 @@ stop () {
 
 end() {
 
-        stop
         uci set monlor.$appname.enable=0
         uci commit monlor
+        stop
         exit 1
 
 }

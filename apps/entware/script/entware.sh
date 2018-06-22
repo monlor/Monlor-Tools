@@ -23,7 +23,7 @@ init() {
 		exit
 	fi
 	[ ! -f $BIN ] && mount -o blind $path /opt > /dev/null 2>&1
-	[ -z "$profilepath" ] && logsh "【$service】" "工具箱环境变量出现问题！" && exit
+	[ -z "$profilepath" ] && logsh "【$service】" "工具箱环境变量出现问题！" && end
 	result1=$(echo $profilepath | grep -c /opt/sbin)
 	result2=$(echo $libpath | grep -c /opt/lib)
 	[ "$result1" == '0' ] && uci -q set monlor.tools.profilepath="$profilepath:/opt/bin:/opt/sbin"
@@ -33,7 +33,7 @@ init() {
 	if [ ! -f $path/etc/init.d/rc.unslung ]; then
 		logsh "【$service】" "检测到第一次运行$appname服务，正在安装..."
 		mkdir -p $path > /dev/null 2>&1
-		[ $? -ne 0 ] && logsh "【Tools】" "创建目录失败，检查你的路径是否正确！" && exit
+		[ $? -ne 0 ] && logsh "【Tools】" "创建目录失败，检查你的路径是否正确！" && end
 		umount -lf /opt > /dev/null 2>&1
 		mount -o blind $path /opt
 		if [ "$xq" == "R3D" ]; then
@@ -44,12 +44,13 @@ init() {
 			wget -O - http://bin.entware.net/mipselsf-k3.4/installer/generic.sh | sh
 		else
 			logsh "【Tools】" "不支持你的路由器！"
-			exit
+			end
 		fi
 		if [ $? -ne 0 ]; then
 			logsh "【Tools】" "【$appname】服务安装失败"
 			umount -lf /opt
 			rm -rf $path
+			exit 1
 		fi
 		/opt/bin/opkg update
 		source /etc/profile > /dev/null 2>&1
@@ -129,6 +130,15 @@ destroy() {
 		sed -i "/alias opkg/d" $monlorpath/config/profile
 		unalias opkg &> /dev/null
 	fi
+}
+
+end() {
+
+        uci set monlor.$appname.enable=0
+        uci commit monlor
+        stop
+        exit 1
+
 }
 
 restart () {
