@@ -18,4 +18,4 @@ MD5 (./httpfile.tar.gz) = 0df977c749a97bc5101f770f6ede4077
 MD5 (./kodexplorer.tar.gz) = 3d65ee202e2321ccbc38c04b531c8922
 MD5 (./zerotier.tar.gz) = a057c671ba4627ea8d3da91ff51a2210
 MD5 (./entware.tar.gz) = a99dae6c7ff2e66da5db82e1c784419d
-MD5 (./frpc.tar.gz) = e03116df9f53bd24a6727fb8869ec9f1
+MD5 (./frpc.tar.gz) = 56107d0c31284a04a1cbccbc1be2d631
