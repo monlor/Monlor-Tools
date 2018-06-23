@@ -55,7 +55,9 @@ manage() {
 	no_update=$(uci -q get monlor.tools.no_update)
 	result=$(cat /etc/crontabs/root | grep -c otapredownload)
 	[ "$no_update" == '1' -a "$result" == '0' ] && no_update="已禁止" || no_update="未禁止"
-	echo "10. 禁止小米路由器自动更新[$no_update]"
+	echo "10. 小米路由器自动更新[$no_update]"
+	[ "$(uci -q get monlor.tools.webui)" == '0' ] && tmptext="未安装" || tmptext="已安装" 
+	echo "11. 工具箱web界面安装设置[$tmptext]"
 	echo
 	read -p "请输入你的选择：" select
 	case "$select" in
@@ -239,6 +241,20 @@ manage() {
 			else
 				sed -i "/otapredownload/d" /etc/crontabs/root
 				echo "15 3,4,5 * * * /usr/sbin/otapredownload >/dev/null 2>&1" >> /etc/crontabs/root
+			fi
+		;;
+		11)
+			read -p "是否要安装工具箱web界面？[1/0] " res
+			uci -q set monlor.tools.webui="$res"
+			if [ "$res" == '0' ]; then
+				umount -lf /usr/lib/lua/luci
+				rm -rf /tmp/mountfiles
+				rm -rf /tmp/syslogbackup/css
+				rm -rf /tmp/syslogbackup/img
+				rm -rf /tmp/luci-modulecache
+				rm -rf /tmp/luci-indexcache
+			elif [ "$res" == '1' ]; then
+				$monlorpath/scripts/addweb
 			fi
 		;;
 		"")

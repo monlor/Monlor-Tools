@@ -43,8 +43,10 @@ if [ "$result" -gt '2' ]; then
         exit
 fi
 
-logsh "【Tools】" "添加工具箱Web页面"
-$monlorpath/scripts/addweb
+if [ "$(uci -q get monlor.tools.webui)" != '0' ]; then
+	logsh "【Tools】" "添加工具箱Web页面"
+	$monlorpath/scripts/addweb
+fi
 
 logsh "【Tools】" "检查环境变量配置"
 result=$(cat /etc/profile | grep -c monlor/config)

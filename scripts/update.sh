@@ -65,7 +65,7 @@ chmod -R +x $monlorpath/scripts/*
 chmod -R +x $monlorpath/config/*
 
 # 更新web页面
-$monlorpath/scripts/addweb
+[ "$(uci -q get monlor.tools.webui)" != '0' ] && $monlorpath/scripts/addweb
 
 #旧版本处理
 result=$(cat /etc/crontabs/root	| grep -c "#monlor-cru")

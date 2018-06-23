@@ -4,7 +4,7 @@ monlorpath=$(uci -q get monlor.tools.path) || exit
 
 miluci="/usr/lib/lua/luci"
 monlorweb="$monlorpath/web"
-staticdir="/tmp/syslogbackup/"
+staticdir="/tmp/syslogbackup"
 tmpluci="/tmp/mountfiles"
 
 mkdir -p $staticdir &> /dev/null
