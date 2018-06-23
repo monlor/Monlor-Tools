@@ -18,3 +18,4 @@ if [ -f $frplist ]; then
 	done
 	[ $? -eq 0 ] && rm -rf $frplist
 fi
+[ -x $monlorpath/apps/$appname/bin/$appname ] && rm -rf /tmp/$appname/bin/$appname

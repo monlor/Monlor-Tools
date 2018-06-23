@@ -12,6 +12,10 @@ eval `ucish export frpc`
 EXTRA_COMMANDS=" status backup recover"
 EXTRA_HELP="        status  Get $appname status"
 # port=
+[ -z "$tcp_mux" ] && tcp_mux="true"
+[ -z "$user" ] && user="monlor"
+[ -z "$protocol" ] && protocol="tcp"
+[ -z "$runver" ] && runver=0.20.0
 
 set_config() {
 
@@ -21,17 +25,31 @@ set_config() {
 		logsh "【$service】" "$appname配置出现问题！"
 		exit
 	fi
+
+	if [ "$($BIN/$appname -v)" != "$runver" ]; then
+		logsh "【$service】" "检测到版本号更换，重新下载$appname程序..."
+		[ "$model" == "mips" ] && tmptext="_mips" || tmptext=""
+		wgetsh "$BIN/$appname" "$monlorurl/temp/frp-bin/$runver/frpc$tmptext"
+		[ "$?" -ne 0 ] && logsh "【$service】" "下载$appname程序失败！" && exit 1
+ 	fi  
 	
 	token=$(uci -q get monlor.$appname.token)
 	cat > $CONF/$appname.conf <<-EOF
 	[common]
 	server_addr = $server
 	server_port = $server_port
-	privilege_token = $token
 	log_file = $LOG/$appname.log
 	log_level = info
 	log_max_days = 1
 	EOF
+	if [ "$runver" != "0.9.3" ]; then
+		echo "token = $token" >> $CONF/$appname.conf
+		echo "tcp_mux = $tcp_mux" >> $CONF/$appname.conf
+		echo "user = $user" >> $CONF/$appname.conf
+		echo "protocol = $protocol" >> $CONF/$appname.conf
+	else
+		echo "privilege_token = $token" >> $CONF/$appname.conf
+	fi
 	ucish keys | while read line
 	do
 		[ -z "$line" ] || [ ${line:0:1} == "#" ] && continue
