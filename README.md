@@ -6,15 +6,15 @@
 >arm路由: R1D R2D R3D，mips路由: R3 R3P R3G R1CM，才疏学浅，但有一颗学习和折腾的心！   
 >目前支持了以下几种插件:  
 
->1. [ShadowSocks](https://github.com/shadowsocks/shadowsocks/tree/master)
->2. [KoolProxy](http://koolshare.b0.upaiyun.com/)
->3. [Aria2](http://aria2.github.io/)
->4. [VsFtpd](https://security.appspot.com/vsftpd.html)
->5. [kms](https://github.com/Wind4/vlmcsd)
->6. [Frpc](https://github.com/fatedier/frp)
->7. [Ngrok](https://github.com/dosgo/ngrok-c)
->8. [WebShell](https://github.com/shellinabox/shellinabox)
->9. [TinyProxy](https://github.com/tinyproxy/tinyproxy)
+>01. [ShadowSocks](https://github.com/shadowsocks/shadowsocks/tree/master)
+>02. [KoolProxy](http://koolshare.b0.upaiyun.com/)
+>03. [Aria2](http://aria2.github.io/)
+>04. [VsFtpd](https://security.appspot.com/vsftpd.html)
+>05. [kms](https://github.com/Wind4/vlmcsd)
+>06. [Frpc](https://github.com/fatedier/frp)
+>07. [Ngrok](https://github.com/dosgo/ngrok-c)
+>08. [WebShell](https://github.com/shellinabox/shellinabox)
+>09. [TinyProxy](https://github.com/tinyproxy/tinyproxy)
 >10. [Entware](https://github.com/Entware/Entware-ng)
 >11. [KodExplorer](https://kodcloud.com/)
 >12. [EasyExplorer](http://koolshare.cn/thread-129199-1-1.html)
@@ -22,6 +22,10 @@
 >14. [VerySync](http://verysync.com/)
 >15. [FastDick](https://github.com/fffonion/Xunlei-Fastdick)
 >16. [FireWall](https://www.netfilter.org/)
+>17. [JetBrains](http://blog.lanyus.com/archives/174.html)
+>18. [QianDao](http://koolshare.cn/thread-127783-1-1.html)
+>19. [FileBrowser](https://github.com/filebrowser/filebrowser)
+>20. [ZeroTier](https://www.zerotier.com)
 
 ## 安装方式：  
 #### 	插件的安装
@@ -65,14 +69,20 @@
 	4. ss插件推荐使用aes-256-cfb或rc4-md5加密方式，mips平台较新的加密方式可能不支持。
 	5. 关于迅雷快鸟FastDick，请按https://github.com/fffonion/Xunlei-Fastdick这里的教程运行swjsq.py并找到运行成功后生成的swjsq_wget.sh文件，提取里面的uid,pwd,peerid即可。
 	6. 插件列表显示异常运行：rm -rf $(uci get monlor.tools.path)/config/applist.txt
+	7. 提问前请指出你的路由器型号，工具箱版本。如果是插件问题运行`cat /var/log/appname*`命令提交日志给我(appname为插件名，部分插件没有日志)
 
 ## 更新内容：
+	2018-06-24
+		1. 插件Entware可以启动ONMP安装程序，安装前请勿安装HttpFile和KodExplorer
+		2. 插件Frpc现在支持版本号选择，并默认安装版本更新到0.20.0
+		3. 现在管理菜单添加临时性功能，web界面安装设置
+
 	2018-06-16
 		1. 工具箱新增web界面，暂时只有ss和kp两个插件，支持最新版固件
 		2. 新增插件“自动签到”，arm平台aria2程序更新到1.34
 		3. 工具箱旧的备份文件已不支持，请重新备份
 		4. 优化了ss插件的iptables规则
-		5. 新增插件filebrowser，web文件管理工具
+		5. 新增插件filebrowser，web文件管理工具，感谢编译@狂飙的小蜗牛
 		6. 本次更新可能导致旧版不能用，请及时更新，如果更新有问题，使用以下命令更新
 		7. curl -skL $(uci get monlor.tools.url)/scripts/update.sh | sh
 
