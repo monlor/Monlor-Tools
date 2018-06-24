@@ -66,10 +66,9 @@
 	1. 如果插件和工具箱都有更新，请务必先更新工具箱！
 	2. 工具箱没有web界面，完全靠Shell开发，插件的安装、卸载、配置由配置文件完成。   
 	3. 安装完成后执行monlor命令配置工具箱，Ctrl + c或者输入exit可以退出。 
-	4. ss插件推荐使用aes-256-cfb或rc4-md5加密方式，mips平台较新的加密方式可能不支持。
-	5. 关于迅雷快鸟FastDick，请按https://github.com/fffonion/Xunlei-Fastdick这里的教程运行swjsq.py并找到运行成功后生成的swjsq_wget.sh文件，提取里面的uid,pwd,peerid即可。
-	6. 插件列表显示异常运行[rm -rf $(uci get monlor.tools.path)/config/applist.txt]，运行monlor会自动获取插件列表
-	7. 提问前请指出你的路由器型号，工具箱版本。如果是插件问题运行[cat /var/log/appname*]命令提交日志给我(appname为插件名，部分插件没有日志)
+	4. 关于迅雷快鸟FastDick，请按https://github.com/fffonion/Xunlei-Fastdick这里的教程运行swjsq.py并找到运行成功后生成的swjsq_wget.sh文件，提取里面的uid,pwd,peerid即可。
+	5. 插件列表显示异常运行[rm -rf $(uci get monlor.tools.path)/config/applist.txt]，运行monlor会自动获取插件列表
+	6. 提问前请指出你的路由器型号，工具箱版本。如果是插件问题运行[cat /var/log/appname*]命令提交日志给我(appname为插件名，部分插件没有日志)
 
 ## 更新内容：
 	2018-06-24
