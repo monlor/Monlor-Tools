@@ -150,9 +150,11 @@ ucish() {
 		;;
         set)
 		uci -q set monlor."$appname"."$uciname"_"$key"="$value"
+		[ $? -eq 0 ] && uci commit monlor 
 		;;
         del)
 		uci -q del monlor."$appname"."$uciname"_"$key"
+		[ $? -eq 0 ] && uci commit monlor 
 		;;
         keys)
 		[ -n "$2" ] && uciname="$2"
@@ -171,6 +173,7 @@ ucish() {
 		do
 			uci -q del monlor."$appname"."$line"
 		done
+		[ $? -eq 0 ] && uci commit monlor 
 		;;
 	export)
 		[ -n "$2" ] && appname="$2" && nvram set appname="$2"
@@ -191,7 +194,6 @@ ucish() {
 		return 1
 		;;
         esac
-        [ $? -eq 0 ] && uci commit monlor
         return 0
 
 }
