@@ -511,7 +511,7 @@ status() {
 	result2=$(iptables -t nat -S | grep -c SHADOWSOCK)
 	[ "$ssgena" == '1' ] && ssgflag=", 游戏节点: $ssgid($ssg_mode)"
 	if [ "$result1" -ge "3" ]; then
-		if [ "$result2" -ge 10 ]; then
+		if [ "$result2" -ge 8 ]; then
 			echo "运行节点: $id($ss_mode)$ssgflag" 
 			echo "1"
 		else
