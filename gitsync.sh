@@ -1,5 +1,5 @@
 #!/bin/bash
-path=~/Documents/Monlor-Tools
+path=~/Monlor-Tools
 cd $path
 [ $? -ne 0 ] && echo "Change directory failed!" && exit
 #find  .  -name  '._*'  -type  f  -print  -exec  rm  -rf  {} \;

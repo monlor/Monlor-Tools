@@ -440,12 +440,12 @@ ss_homemode() {
 stop() {
 	
 	logsh "【$service】" "关闭ss主进程..."
-	killall ss-redir > /dev/null 2>&1
-	killall ssr-redir > /dev/null 2>&1
-	killall ssg-redir > /dev/null 2>&1
-	killall ss-local > /dev/null 2>&1
-	killall ssr-local > /dev/null 2>&1
-	killall dns2socks > /dev/null 2>&1
+	killall -9 ss-redir > /dev/null 2>&1
+	killall -9 ssr-redir > /dev/null 2>&1
+	killall -9 ssg-redir > /dev/null 2>&1
+	killall -9 ss-local > /dev/null 2>&1
+	killall -9 ssr-local > /dev/null 2>&1
+	killall -9 dns2socks > /dev/null 2>&1
 	#删除定时规则
 	cru d "$appname"
 	cru d "$appname"_online
