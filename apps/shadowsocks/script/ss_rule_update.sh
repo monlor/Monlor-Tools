@@ -6,7 +6,7 @@ eval `ucish export shadowsocks`
 chnroute=$CONF/chnroute.txt
 gfwlist=$CONF/gfwlist.conf
 cdnlist=$CONF/cdn.txt
-url="https://koolshare.ngrok.wang/maintain_files"
+url="https://raw.githubusercontent.com/hq450/fancyss/master/rules"
 
 logsh "【$service】" "更新$appname分流规则"
 wgetsh $gfwlist $url/gfwlist.conf
