@@ -64,7 +64,7 @@ function ssGet()
         result["ssmode"] = uci:get("monlor", appname, "ss_mode") 
         result["ssgmode"] = uci:get("monlor", appname, "ssg_mode")
         -- 获得ss节点
-        local conf=LuciUtil.exec("cat "..monlorpath.."/apps/"..appname.."/config/ssserver.conf | awk -F ',' '{print $1}'")
+        local conf=LuciUtil.exec("cat "..monlorpath.."/apps/"..appname.."/config/ssserver*.conf | awk -F ',' '{print $1}'")
         local sslist=string.split(conf,'\n') 
         -- for i,v in pairs(ssnamelist) do 
         --         if ssnamelist[i] ~= '' then
