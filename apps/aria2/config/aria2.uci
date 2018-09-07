@@ -3,3 +3,4 @@ uci set monlor.$appname=config
 uci set monlor.$appname.service=Aria2
 uci set monlor.$appname.appname="$appname"
 uci set monlor.$appname.tools="2.5.28"
+uci set monlor.$appname.newinfo="更新了R3G的二进制文件"

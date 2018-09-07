@@ -8,7 +8,6 @@ MD5 (./firewall.tar.gz) = 64babead10ceb52326704ed353f4f42e
 MD5 (./jetbrains.tar.gz) = f5cb34e26473204dbbf66540883ee501
 3a9dddb34f3b120d689e8479bea0c0f4  ./monlor.tar.gz
 MD5 (./filebrowser.tar.gz) = d137f6797409e161af4d55c3c95cca6f
-MD5 (./aria2.tar.gz) = 81927cb540c260efcfe288eca6a21d3d
 MD5 (./koolproxy.tar.gz) = 775914cc18bf8bd46fec1fbf05d98644
 MD5 (./easyexplorer.tar.gz) = dfc980f35a49aef736656c1898e5b2d3
 MD5 (./qiandao.tar.gz) = 40865d760a5d51a02f47a815b67f727c
@@ -19,3 +18,4 @@ MD5 (./entware.tar.gz) = a99dae6c7ff2e66da5db82e1c784419d
 MD5 (./frpc.tar.gz) = 56107d0c31284a04a1cbccbc1be2d631
 MD5 (./verysync.tar.gz) = 5561c998c1bd11cfb8820a6b1f326b70
 57d6111a4cc063ce4c975a0b17c9b634  ./shadowsocks.tar.gz
+fefecdfd69239d68086c8bce4b33f4a4  ./aria2.tar.gz
