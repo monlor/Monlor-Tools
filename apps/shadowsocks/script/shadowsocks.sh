@@ -249,11 +249,14 @@ load_nat() {
 	ipset -N customize_white iphash -!
 	ipset -N router iphash -!
 	# 生成黑名单规则
-	cat $CONF/customize_black.conf | while read line                                                                   
+	cat $CONF/customize_black.conf | sed -E '/^$|^[#;]/d' | while read line                                                                   
 	do         
-		[ -z "$line" ] && continue                                                                                     
-		echo "server=/.$line/127.0.0.1#15353" >> /tmp/wblist.conf  
-		echo "ipset=/.$line/customize_black" >> /tmp/wblist.conf                     
+		if [ -z "$(echo $line | grep -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}")" ]; then                                                                                
+			echo "server=/.$line/127.0.0.1#15353" >> /tmp/wblist.conf  
+			echo "ipset=/.$line/customize_black" >> /tmp/wblist.conf  
+		else
+			ipset -! add customize_black $line &> /dev/null
+		fi                   
 	done
 	ip_tg="149.154.0.0/16 91.108.4.0/22 91.108.56.0/24 109.239.140.0/24 67.198.55.0/24"
 	for ip in $ip_tg
@@ -281,11 +284,14 @@ load_nat() {
 		echo "ipset=/.apnic.net/router" >> /tmp/wblist.conf
 	fi
 	# 生成白名单规则
-	cat $CONF/customize_white.conf | while read line
+	cat $CONF/customize_white.conf | sed -E '/^$|^[#;]/d' | while read line
 	do
-		[ -z "$line" ] && continue
-		echo "server=/.$line/$CDN#53" >> /tmp/wblist.conf
-		echo "ipset=/.$line/customize_white" >> /tmp/wblist.conf
+		if [ -z "$(echo $line | grep -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}")" ]; then
+			echo "server=/.$line/$CDN#53" >> /tmp/wblist.conf
+			echo "ipset=/.$line/customize_white" >> /tmp/wblist.conf
+		else
+			ipset -! add customize_white $line &> /dev/null
+		fi
 	done 
 	echo "server=/.apple.com/$CDN#53" >> /tmp/wblist.conf
 	echo "ipset=/.apple.com/customize_white" >> /tmp/wblist.conf

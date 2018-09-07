@@ -17,5 +17,5 @@ MD5 (./zerotier.tar.gz) = a057c671ba4627ea8d3da91ff51a2210
 MD5 (./entware.tar.gz) = a99dae6c7ff2e66da5db82e1c784419d
 MD5 (./frpc.tar.gz) = 56107d0c31284a04a1cbccbc1be2d631
 MD5 (./verysync.tar.gz) = 5561c998c1bd11cfb8820a6b1f326b70
-57d6111a4cc063ce4c975a0b17c9b634  ./shadowsocks.tar.gz
 fefecdfd69239d68086c8bce4b33f4a4  ./aria2.tar.gz
+7029b8b355537694d10c2a44b133ff2c  ./shadowsocks.tar.gz

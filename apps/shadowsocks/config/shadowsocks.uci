@@ -3,4 +3,4 @@ uci set monlor.$appname=config
 uci set monlor.$appname.service=ShadowSocks
 uci set monlor.$appname.appname="$appname"
 uci set monlor.$appname.tools="2.6.13"
-uci set monlor.$appname.newinfo="更新了ss的规则地址"
+uci set monlor.$appname.newinfo="自定义黑白名单支持ip和域名，自动识别"
