@@ -3,6 +3,8 @@
 > 测试版已更新，支持添加ss自定义ip规则（以前仅支持域名），为R3G更新了aria2二进制文件，不知能否解决CPU占用问题。
 >
 > 由于多次收到建群的需求，所以特此建了一个TG群，大家有问题就自行交流吧！[MBOX CHAT](https://t.me/joinchat/FMraA0lwzH9fzEW1wXdCFA)
+>
+> 我的博客：[Monlor's Blog](https://www.monlor.com)
 
 ![工具箱界面](https://raw.githubusercontent.com/monlor/Monlor-Tools/master/temp/img.png)
 
