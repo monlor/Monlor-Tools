@@ -249,7 +249,7 @@ load_nat() {
 	ipset -N customize_white iphash -!
 	ipset -N router iphash -!
 	# 生成黑名单规则
-	cat $CONF/customize_black.conf | sed -E '/^$|^[#;]/d' | while read line                                                                   
+	cat $CONF/customize_black.conf | grep -Ev '^$|^[#;]' | while read line                                                                   
 	do         
 		if [ -z "$(echo $line | grep -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}")" ]; then                                                                                
 			echo "server=/.$line/127.0.0.1#15353" >> /tmp/wblist.conf  
@@ -284,7 +284,7 @@ load_nat() {
 		echo "ipset=/.apnic.net/router" >> /tmp/wblist.conf
 	fi
 	# 生成白名单规则
-	cat $CONF/customize_white.conf | sed -E '/^$|^[#;]/d' | while read line
+	cat $CONF/customize_white.conf | grep -Ev '^$|^[#;]' | while read line
 	do
 		if [ -z "$(echo $line | grep -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}")" ]; then
 			echo "server=/.$line/$CDN#53" >> /tmp/wblist.conf

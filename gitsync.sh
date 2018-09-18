@@ -1,6 +1,6 @@
 #!/bin/bash
-path=~/Monlor-Tools
-cd $path
+#path=~/Monlor-Tools
+#cd $path
 [ $? -ne 0 ] && echo "Change directory failed!" && exit
 #find  .  -name  '._*'  -type  f  -print  -exec  rm  -rf  {} \;
 find . -name '.DS_Store' | xargs rm -rf
