@@ -3,4 +3,4 @@ uci set monlor.$appname=config
 uci set monlor.$appname.service=ShadowSocks
 uci set monlor.$appname.appname="$appname"
 uci set monlor.$appname.tools="2.6.13"
-uci set monlor.$appname.newinfo="解决部分型号自带程序由于版本不一致导致运行参数不支持的问题"
+uci set monlor.$appname.newinfo="修复ss插件dns解析失败的问题！"
