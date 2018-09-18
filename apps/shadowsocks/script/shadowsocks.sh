@@ -34,7 +34,7 @@ get_config() {
 	ssr_obfs_param=`cutsh "$idinfo" 9`
 	IFIP=`echo $ss_server | grep -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}|:"`
 	if [ -z "$IFIP" ]; then
-		ss_server_tmp=`nslookup $ss_server | sed 1,2d | grep "Address" | awk '{print$2}' | head -1` 
+		ss_server_tmp=`nslookup $ss_server | sed 1,2d | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | head -1` 
 		[ -z "$ss_server_tmp" ] && logsh "【$service】" "ss服务器地址解析失败，跳过解析！" || ss_server="$ss_server_tmp"
    	fi
 	#生成配置文件
