@@ -83,7 +83,6 @@ while true; do
 
         if [ -z "$session" ]; then
             log "login xunlei"
-            ret=`$HTTP_REQ https://mobile-login.xunlei.com:443/login $POST_ARG"{\"protocolVersion\": \"200\", \"sequenceNo\": \"1000001\", \"platformVersion\": \"2\", \"sdkVersion\": \"177662\", \"peerID\": \"9061AEDF09BC004V\", \"businessType\": \"68\", \"clientVersion\": \"2.4.1.3\", \"devicesign\": \"div101.888e1a5c5bcf7d41c1e0ac897dc3fcb156aadcab4fe16fa1ed205a1e894d525c\", \"isCompressed\": \"0\", \"userName\": \"monlor\", \"passWord\": \"Gqj242643\", \"sessionID\": \"\", \"verifyKey\": \"\", \"verifyCode\": \"\", \"appName\": \"ANDROID-com.xunlei.vip.swjsq\", \"deviceModel\": \"R1\", \"deviceName\": \"SmallRice R1\", \"OSVersion\": \"5.0.1\"}" --header "$UA_XL"`
             session_temp=`echo $ret|grep -oE "sessionID...[A-F,0-9]{32}"`
             session=`echo $session_temp|grep -oE "[A-F,0-9]{32}"`
             uid_temp=`echo $ret|grep -oE "userID...[0-9]+"`

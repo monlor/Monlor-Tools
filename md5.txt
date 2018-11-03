@@ -1,4 +1,3 @@
-MD5 (./fastdick.tar.gz) = 5145f7e663998e0644f8b59fade1c106
 MD5 (./kms.tar.gz) = c031f5c2771123a02fa71b4efdd428af
 MD5 (./ngrok.tar.gz) = 2006be7f271aa9bed43f29a607ec3e45
 MD5 (./tinyproxy.tar.gz) = 9567284f9f507549538bf31cc10bebd7
@@ -19,3 +18,4 @@ MD5 (./frpc.tar.gz) = 56107d0c31284a04a1cbccbc1be2d631
 MD5 (./verysync.tar.gz) = 5561c998c1bd11cfb8820a6b1f326b70
 fefecdfd69239d68086c8bce4b33f4a4  ./aria2.tar.gz
 MD5 (./shadowsocks.tar.gz) = 89c5e3e922cd4bbc962c1f6dd0c9f4b5
+7906f08b1c5c4c82eeac3c336985aaf6  ./fastdick.tar.gz
